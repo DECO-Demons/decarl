@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:io' show Platform;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
@@ -13,15 +15,30 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  late GoogleMapController mapController;
+  late String mapStyleAndroid;
+  late String mapStyleIos;
 
+  @override
+  void initState() {
+    // Map style for Android must load from .txt, for iOS from .json
+    rootBundle.loadString('assets/map_style.txt').then((string) {
+      mapStyleAndroid = string;
+    });
+    rootBundle.loadString('assets/map_style.json').then((string) {
+      mapStyleIos = string;
+    });
+    super.initState();
+  }
+
+  late GoogleMapController mapController;
+  // Default location
   final LatLng _center = const LatLng(45.521563, -122.677433);
 
-  void _onMapCreated(GoogleMapController controller) async {
+  void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-    String style = await DefaultAssetBundle.of(context)
-        .loadString('assets/map_style.json');
-    controller.setMapStyle(style);
+    Platform.isAndroid
+        ? controller.setMapStyle(mapStyleAndroid)
+        : controller.setMapStyle(mapStyleIos);
   }
 
   @override
