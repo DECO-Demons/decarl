@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>609017027503-te7u4eu0v106ohf69id3vg33uon0c9o7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.609017027503-te7u4eu0v106ohf69id3vg33uon0c9o7</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCJPlrDt6MjcTpq78g0ue96sOM2y4gvVxM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>609017027503</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.decarl</string>
+	<key>PROJECT_ID</key>
+	<string>decarl</string>
+	<key>STORAGE_BUCKET</key>
+	<string>decarl.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:609017027503:ios:50939dd5ee0e74a5ea2d5a</string>
+	<key>DATABASE_URL</key>
+	<string>https://decarl-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
