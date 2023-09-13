@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'firebase_options.dart';
 
 import 'screens/map.dart' show MapPage;
@@ -12,6 +13,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final ref = FirebaseDatabase.instance.ref();
+  final snapshot = await ref.child('art/1').get();
+  if (snapshot.exists) {
+    print(snapshot.value);
+  } else {
+    print('No data available.');
+  }
 
   runApp(const MainApp());
 }
