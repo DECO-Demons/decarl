@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+//import 'package:geolocator/geolocator.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -25,6 +26,7 @@ class _MapPageState extends State<MapPage> {
     rootBundle.loadString('assets/map_style.json').then((string) {
       _mapStyleIos = string;
     });
+
     super.initState();
   }
 
@@ -41,16 +43,19 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: GoogleMap(
-      onMapCreated: _onMapCreated,
-      gestureRecognizers: {
-        Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer()),
-      },
-      initialCameraPosition: CameraPosition(
-        target: _center,
-        zoom: 11.0,
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      child: GoogleMap(
+        onMapCreated: _onMapCreated,
+        rotateGesturesEnabled: false,
+        gestureRecognizers: {
+          Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer()),
+        },
+        initialCameraPosition: CameraPosition(
+          target: _center,
+          zoom: 11.0,
+        ),
       ),
-    ));
+    );
   }
 }
