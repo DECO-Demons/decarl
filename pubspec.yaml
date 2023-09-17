@@ -11,8 +11,12 @@ dependencies:
   firebase_database: ^10.2.5
   flutter:
     sdk: flutter
-  geolocator: ^10.0.0
+  geolocator: 9.0.2
   google_maps_flutter: ^2.4.1
+  ar_flutter_plugin: 
+    git:
+      https://github.com/SoroushBeigi/ar_flutter_plugin.git
+
 
 dev_dependencies:
   flutter_test:
@@ -25,3 +29,5 @@ flutter:
   assets:
     - assets/map_style.json
     - assets/map_style.txt
+    - assets/triangle.png
+    - assets/Chicken_01/
