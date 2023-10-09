@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'dart:io' show Platform;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
-//import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -30,6 +29,11 @@ class _MapPageState extends State<MapPage> {
     super.initState();
   }
 
+  void _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
   late GoogleMapController mapController;
   // Default location
   final LatLng _center = const LatLng(45.521563, -122.677433);
@@ -46,16 +50,20 @@ class _MapPageState extends State<MapPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: GoogleMap(
-        onMapCreated: _onMapCreated,
-        rotateGesturesEnabled: false,
-        gestureRecognizers: {
-          Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer()),
-        },
-        initialCameraPosition: CameraPosition(
-          target: _center,
-          zoom: 11.0,
-        ),
-      ),
+          onMapCreated: _onMapCreated,
+          rotateGesturesEnabled: false,
+          initialCameraPosition: CameraPosition(
+            target: _center,
+            zoom: 11.0,
+          ),
+          circles: {
+            Circle(
+              circleId: CircleId("1"),
+              center: _center,
+              radius: 430,
+              fillColor: Color.fromARGB(0, 222, 43, 43).withOpacity(0.2),
+            ),
+          }),
     );
   }
 }

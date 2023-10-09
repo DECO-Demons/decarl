@@ -14,10 +14,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  late Object? data;
+
   final ref = FirebaseDatabase.instance.ref();
   final snapshot = await ref.child('art/1').get();
   if (snapshot.exists) {
-    print(snapshot.value);
+    data = snapshot.value;
+    print(data);
   } else {
     print('No data available.');
   }
