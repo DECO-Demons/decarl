@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+
 import 'dart:io' show Platform;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -29,10 +32,10 @@ class _MapPageState extends State<MapPage> {
     super.initState();
   }
 
-  void _getCurrentLocation() async {
+  /*void _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-  }
+  }*/
 
   late GoogleMapController mapController;
   // Default location
@@ -56,13 +59,16 @@ class _MapPageState extends State<MapPage> {
             target: _center,
             zoom: 11.0,
           ),
+          gestureRecognizers: {
+            Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
+          },
           circles: {
             Circle(
-              circleId: CircleId("1"),
-              center: _center,
-              radius: 430,
-              fillColor: Color.fromARGB(0, 222, 43, 43).withOpacity(0.2),
-            ),
+                circleId: CircleId("1"),
+                center: _center,
+                radius: 4300,
+                fillColor: Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
+                strokeColor: Color.fromARGB(0, 0, 0, 0).withOpacity(0)),
           }),
     );
   }
