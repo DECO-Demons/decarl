@@ -6,7 +6,7 @@ import 'package:flutter/gestures.dart';
 
 import 'dart:io' show Platform;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -19,6 +19,10 @@ class _MapPageState extends State<MapPage> {
   late String _mapStyleAndroid;
   late String _mapStyleIos;
 
+  late LatLng _center;
+
+  //Position? _currentPosition;
+
   @override
   void initState() {
     // Map style for Android must load from .txt, for iOS from .json
@@ -30,22 +34,57 @@ class _MapPageState extends State<MapPage> {
     });
 
     super.initState();
-  }
 
-  /*void _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }*/
+    _determinePosition().then((value) {
+      _center = LatLng(value.latitude, value.longitude);
+    });
+  }
 
   late GoogleMapController mapController;
   // Default location
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  //final LatLng _center = const LatLng(45.521563, -122.677433);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     Platform.isAndroid
         ? controller.setMapStyle(_mapStyleAndroid)
         : controller.setMapStyle(_mapStyleIos);
+  }
+
+  /*void _getCurrentPosition() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentPosition = position;
+    });
+
+    print(_currentPosition.toString());
+  }*/
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
   }
 
   @override
