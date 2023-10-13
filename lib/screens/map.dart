@@ -27,8 +27,6 @@ class _MapPageState extends State<MapPage> {
   final Location _locationController = Location();
   LatLng? _currentPos;
 
-  double zoomLevel = 13.0;
-
   @override
   void initState() {
     // Map style for Android must load from .txt, for iOS from .json
@@ -58,22 +56,17 @@ class _MapPageState extends State<MapPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: _currentPos == null
-          ? const Center(
-              child: Text(
-                  "Location services not enabled, please enable them in Settings to use this feature"))
+          ? const Center(child: Text("Loading..."))
           : GoogleMap(
               onMapCreated: _onMapCreated,
-              onCameraMove: (CameraPosition pos) {
-                zoomLevel = pos.zoom;
-              },
               rotateGesturesEnabled: false,
               initialCameraPosition: CameraPosition(
                 target: _currentPos!,
                 zoom: 11.0,
               ),
-              gestureRecognizers: {
+              /*gestureRecognizers: {
                   Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
-                },
+                },*/
               circles: {
                   Circle(
                       circleId: CircleId("1"),
@@ -86,14 +79,6 @@ class _MapPageState extends State<MapPage> {
                           const Color.fromARGB(0, 0, 0, 0).withOpacity(0)),
                 }),
     );
-  }
-
-  Future<void> _cameraToLocation(LatLng location) async {
-    final GoogleMapController controller = await _mapController.future;
-    CameraPosition newCameraPos =
-        CameraPosition(target: location, zoom: zoomLevel);
-    await controller
-        .animateCamera(CameraUpdate.newCameraPosition(newCameraPos));
   }
 
   Future<void> getLocationUpdates() async {
@@ -122,7 +107,6 @@ class _MapPageState extends State<MapPage> {
         setState(() {
           _currentPos =
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          _cameraToLocation(_currentPos!);
         });
       }
     });
