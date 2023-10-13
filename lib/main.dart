@@ -8,7 +8,7 @@ import 'screens/map.dart' show MapPage;
 import 'screens/home.dart' show HomePage;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  /*WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -23,7 +23,7 @@ void main() async {
     print(data);
   } else {
     print('No data available.');
-  }
+  }*/
 
   runApp(const MainApp());
 }

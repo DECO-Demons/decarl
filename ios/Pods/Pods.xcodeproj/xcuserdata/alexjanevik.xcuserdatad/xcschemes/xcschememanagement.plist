@@ -64,17 +64,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>geolocator_apple.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>google_maps_flutter_ios.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>leveldb-library.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>location.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

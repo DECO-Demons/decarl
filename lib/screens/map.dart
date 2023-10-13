@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,7 +8,7 @@ import 'package:flutter/gestures.dart';
 
 import 'dart:io' show Platform;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -19,9 +21,11 @@ class _MapPageState extends State<MapPage> {
   late String _mapStyleAndroid;
   late String _mapStyleIos;
 
-  late LatLng _center;
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
 
-  //Position? _currentPosition;
+  Location _locationController = new Location();
+  LatLng? _currentPos = null;
 
   @override
   void initState() {
@@ -34,81 +38,87 @@ class _MapPageState extends State<MapPage> {
     });
 
     super.initState();
-
-    _determinePosition().then((value) {
-      _center = LatLng(value.latitude, value.longitude);
-    });
+    if (mounted) {
+      getLocationUpdates();
+    }
   }
 
-  late GoogleMapController mapController;
-  // Default location
-  //final LatLng _center = const LatLng(45.521563, -122.677433);
-
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    _mapController.complete(controller);
+
     Platform.isAndroid
         ? controller.setMapStyle(_mapStyleAndroid)
         : controller.setMapStyle(_mapStyleIos);
-  }
-
-  /*void _getCurrentPosition() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      _currentPosition = position;
-    });
-
-    print(_currentPosition.toString());
-  }*/
-
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    return await Geolocator.getCurrentPosition();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
-      child: GoogleMap(
-          onMapCreated: _onMapCreated,
-          rotateGesturesEnabled: false,
-          initialCameraPosition: CameraPosition(
-            target: _center,
-            zoom: 11.0,
-          ),
-          gestureRecognizers: {
-            Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
-          },
-          circles: {
-            Circle(
-                circleId: CircleId("1"),
-                center: _center,
-                radius: 4300,
-                fillColor: Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
-                strokeColor: Color.fromARGB(0, 0, 0, 0).withOpacity(0)),
-          }),
+      child: _currentPos == null
+          ? const Center(
+              child: Text(
+                  "Location services not enabled, please enable them in Settings to use this feature"))
+          : GoogleMap(
+              onMapCreated: _onMapCreated,
+              rotateGesturesEnabled: false,
+              initialCameraPosition: CameraPosition(
+                target: _currentPos!,
+                zoom: 11.0,
+              ),
+              gestureRecognizers: {
+                  Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
+                },
+              circles: {
+                  Circle(
+                      circleId: CircleId("1"),
+                      center:
+                          LatLng(_currentPos!.latitude, _currentPos!.longitude),
+                      radius: 430,
+                      fillColor:
+                          const Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
+                      strokeColor:
+                          const Color.fromARGB(0, 0, 0, 0).withOpacity(0)),
+                }),
     );
+  }
+
+  Future<void> _cameraToLocation(LatLng location) async {
+    final GoogleMapController controller = await _mapController.future;
+    CameraPosition newCameraPos = CameraPosition(target: location, zoom: 11.0);
+    await controller
+        .animateCamera(CameraUpdate.newCameraPosition(newCameraPos));
+  }
+
+  Future<void> getLocationUpdates() async {
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await _locationController.serviceEnabled();
+    if (serviceEnabled) {
+      serviceEnabled = await _locationController.requestService();
+    } else {
+      return;
+    }
+
+    permissionGranted = await _locationController.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _locationController.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationController.onLocationChanged
+        .listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
+        setState(() {
+          _currentPos =
+              LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          _cameraToLocation(_currentPos!);
+        });
+      }
+    });
   }
 }

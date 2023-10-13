@@ -22,24 +22,23 @@
 #import <GoogleMapsBase/GoogleMapsBase.h>
 #endif
 #import "GMSMapLayer.h"
-#import "GMSUISettings.h"
-#import "GMSAccessibilityLabels.h"
 
 @class GMSCameraPosition;
 @class GMSCameraUpdate;
 @class GMSCoordinateBounds;
 @class GMSIndoorDisplay;
-@class GMSMapLayer;
+@class GMSMapID;
 @class GMSMapStyle;
 @class GMSMapView;
 @class GMSMarker;
 @class GMSOverlay;
 @class GMSProjection;
+@class GMSUISettings;
 
 NS_ASSUME_NONNULL_BEGIN
 
 /** Delegate for events on GMSMapView. */
-@protocol GMSMapViewDelegate<NSObject>
+@protocol GMSMapViewDelegate <NSObject>
 
 @optional
 
@@ -50,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param mapView The map view that was tapped.
  * @param gesture If YES, this is occurring due to a user gesture.
-*/
+ */
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture;
 
 /**
@@ -447,14 +446,29 @@ typedef NS_ENUM(NSUInteger, GMSMapViewPaddingAdjustmentBehavior) {
 @property(nonatomic, nullable) GMSCoordinateBounds *cameraTargetBounds;
 
 /**
- * Convenience initializer that builds and returns a GMSMapView, with a frame and camera target.
+ * Builds and returns a map view with a frame and camera target.
+ */
++ (instancetype)mapWithFrame:(CGRect)frame camera:(GMSCameraPosition *)camera;
+
+/**
+ * Convenience initializer to build and return a map view with a frame, map ID and camera target.
+ */
++ (instancetype)mapWithFrame:(CGRect)frame
+                       mapID:(GMSMapID *)mapID
+                      camera:(GMSCameraPosition *)camera
+    NS_SWIFT_UNAVAILABLE("Use initializer instead");
+
+/**
+ * Builds and returns a map view, with a frame and camera target.
  */
 - (instancetype)initWithFrame:(CGRect)frame camera:(GMSCameraPosition *)camera;
 
 /**
- * Builds and returns a GMSMapView, with a frame and camera target.
+ * Builds and returns a map view with a frame, map ID and camera target.
  */
-+ (instancetype)mapWithFrame:(CGRect)frame camera:(GMSCameraPosition *)camera;
+- (instancetype)initWithFrame:(CGRect)frame
+                        mapID:(GMSMapID *)mapID
+                       camera:(GMSCameraPosition *)camera;
 
 /**
  * Tells this map to power up its renderer. This is optional and idempotent.
