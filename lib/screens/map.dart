@@ -24,8 +24,10 @@ class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
-  Location _locationController = new Location();
-  LatLng? _currentPos = null;
+  final Location _locationController = Location();
+  LatLng? _currentPos;
+
+  double zoomLevel = 13.0;
 
   @override
   void initState() {
@@ -61,6 +63,9 @@ class _MapPageState extends State<MapPage> {
                   "Location services not enabled, please enable them in Settings to use this feature"))
           : GoogleMap(
               onMapCreated: _onMapCreated,
+              onCameraMove: (CameraPosition pos) {
+                zoomLevel = pos.zoom;
+              },
               rotateGesturesEnabled: false,
               initialCameraPosition: CameraPosition(
                 target: _currentPos!,
@@ -85,7 +90,8 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _cameraToLocation(LatLng location) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition newCameraPos = CameraPosition(target: location, zoom: 11.0);
+    CameraPosition newCameraPos =
+        CameraPosition(target: location, zoom: zoomLevel);
     await controller
         .animateCamera(CameraUpdate.newCameraPosition(newCameraPos));
   }
