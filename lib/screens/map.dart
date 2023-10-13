@@ -38,9 +38,7 @@ class _MapPageState extends State<MapPage> {
     });
 
     super.initState();
-    if (mounted) {
-      getLocationUpdates();
-    }
+    getLocationUpdates();
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -53,7 +51,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: _currentPos == null
           ? const Center(child: Text("Loading..."))
@@ -62,11 +60,12 @@ class _MapPageState extends State<MapPage> {
               rotateGesturesEnabled: false,
               initialCameraPosition: CameraPosition(
                 target: _currentPos!,
-                zoom: 11.0,
+                zoom: 13.0,
               ),
-              /*gestureRecognizers: {
-                  Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
-                },*/
+              gestureRecognizers: {
+                  Factory<EagerGestureRecognizer>(
+                      () => EagerGestureRecognizer()),
+                },
               circles: {
                   Circle(
                       circleId: CircleId("1"),
@@ -104,10 +103,12 @@ class _MapPageState extends State<MapPage> {
         .listen((LocationData currentLocation) {
       if (currentLocation.latitude != null &&
           currentLocation.longitude != null) {
-        setState(() {
-          _currentPos =
-              LatLng(currentLocation.latitude!, currentLocation.longitude!);
-        });
+        if (mounted) {
+          setState(() {
+            _currentPos =
+                LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          });
+        }
       }
     });
   }
