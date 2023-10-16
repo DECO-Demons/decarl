@@ -8,23 +8,19 @@ import 'screens/map.dart' show MapPage;
 import 'screens/home.dart' show HomePage;
 
 void main() async {
-  /*WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  late Object? data;
-
   final ref = FirebaseDatabase.instance.ref();
-  final snapshot = await ref.child('art/1').get();
+  final snapshot = await ref.child('art').get();
   if (snapshot.exists) {
-    data = snapshot.value;
-    print(data);
+    print(snapshot.value);
   } else {
     print('No data available.');
-  }*/
-
+  }
   runApp(const MainApp());
 }
 
