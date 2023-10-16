@@ -20,7 +20,7 @@ class User {
             "display_name": display_name,
             "full_name": full_name,
             "location": location,
-            "follows_user_ids": follows_user_ids.join(",")
+            "follows_user_ids": follows_user_ids!.join(",")
         };
     }
 
