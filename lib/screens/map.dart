@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  final List<List<double>> locationData;
+
+  const MapPage({Key? key, required this.locationData}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -20,6 +23,9 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   late String _mapStyleAndroid;
   late String _mapStyleIos;
+
+  double zoomLevel = 13.0;
+  Set<Circle> circles = {};
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -39,6 +45,7 @@ class _MapPageState extends State<MapPage> {
 
     super.initState();
     getLocationUpdates();
+    circles = generateCircles(widget.locationData);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -49,36 +56,50 @@ class _MapPageState extends State<MapPage> {
         : controller.setMapStyle(_mapStyleIos);
   }
 
+  Set<Circle> generateCircles(List<List<double>> latLongList) {
+    Set<Circle> circleList = {};
+    double radius = 0.0 + pow(5, 1 / (zoomLevel / 50));
+
+    for (int i = 0; i < latLongList.length; i++) {
+      circleList.add(
+        Circle(
+            circleId: CircleId(i.toString()),
+            center: LatLng(latLongList[i][0], latLongList[i][1]),
+            radius: radius,
+            fillColor: const Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
+            strokeColor: const Color.fromARGB(0, 0, 0, 0).withOpacity(0)),
+      );
+    }
+
+    print(circleList);
+
+    return circleList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15),
-      child: _currentPos == null
-          ? const Center(child: Text("Loading..."))
-          : GoogleMap(
-              onMapCreated: _onMapCreated,
-              rotateGesturesEnabled: false,
-              myLocationButtonEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: _currentPos!,
-                zoom: 13.0,
-              ),
-              gestureRecognizers: {
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        child: _currentPos == null
+            ? const Center(child: Text("Loading..."))
+            : GoogleMap(
+                onMapCreated: _onMapCreated,
+                rotateGesturesEnabled: false,
+                myLocationButtonEnabled: false,
+                onCameraMove: (CameraPosition position) {
+                  zoomLevel = position.zoom;
+                  circles = generateCircles(widget.locationData);
+                },
+                initialCameraPosition: CameraPosition(
+                  target: _currentPos!,
+                  zoom: 13,
+                ),
+                gestureRecognizers: {
                   Factory<EagerGestureRecognizer>(
                       () => EagerGestureRecognizer()),
                 },
-              circles: {
-                  Circle(
-                      circleId: CircleId("1"),
-                      center:
-                          LatLng(_currentPos!.latitude, _currentPos!.longitude),
-                      radius: 430,
-                      fillColor:
-                          const Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
-                      strokeColor:
-                          const Color.fromARGB(0, 0, 0, 0).withOpacity(0)),
-                }),
-    );
+                circles: circles,
+              ));
   }
 
   Future<void> getLocationUpdates() async {
