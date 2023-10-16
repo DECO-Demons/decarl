@@ -24,10 +24,10 @@ PODS:
   - google_maps_flutter_ios (0.0.1):
     - Flutter
     - GoogleMaps (< 8.0)
-  - GoogleMaps (8.2.0.0):
-    - GoogleMaps/Maps (= 8.2.0.0)
-  - GoogleMaps/Base (8.2.0.0)
-  - GoogleMaps/Maps (8.2.0.0):
+  - GoogleMaps (6.2.1):
+    - GoogleMaps/Maps (= 6.2.1)
+  - GoogleMaps/Base (6.2.1)
+  - GoogleMaps/Maps (6.2.1):
     - GoogleMaps/Base
   - GoogleUtilities/Environment (7.11.5):
     - PromisesObjC (< 3.0, >= 1.2)

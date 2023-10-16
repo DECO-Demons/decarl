@@ -8,6 +8,11 @@ import 'screens/map.dart' show MapPage;
 import 'screens/home.dart' show HomePage;
 
 void main() async {
+  fetchPostData();
+  runApp(const MainApp());
+}
+
+void fetchPostData() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -17,11 +22,18 @@ void main() async {
   final ref = FirebaseDatabase.instance.ref();
   final snapshot = await ref.child('art').get();
   if (snapshot.exists) {
-    print(snapshot.value);
+    Object? data = snapshot.value;
+
+    if (data is List) {
+      for (var entry in data) {
+        if (entry != null) {
+          print(entry["lat_lon"]);
+        }
+      }
+    }
   } else {
     print('No data available.');
   }
-  runApp(const MainApp());
 }
 
 class MainApp extends StatefulWidget {
