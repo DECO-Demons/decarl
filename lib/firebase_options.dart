@@ -54,8 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:609017027503:android:d1a1f5da590fe22eea2d5a',
     messagingSenderId: '609017027503',
     projectId: 'decarl',
-    databaseURL:
-        'https://decarl-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL: 'https://decarl-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'decarl.appspot.com',
   );
 
@@ -64,11 +63,9 @@ class DefaultFirebaseOptions {
     appId: '1:609017027503:ios:50939dd5ee0e74a5ea2d5a',
     messagingSenderId: '609017027503',
     projectId: 'decarl',
-    databaseURL:
-        'https://decarl-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL: 'https://decarl-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'decarl.appspot.com',
-    iosClientId:
-        '609017027503-te7u4eu0v106ohf69id3vg33uon0c9o7.apps.googleusercontent.com',
+    iosClientId: '609017027503-te7u4eu0v106ohf69id3vg33uon0c9o7.apps.googleusercontent.com',
     iosBundleId: 'com.example.decarl',
   );
 }

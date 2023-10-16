@@ -7,7 +7,7 @@ environment:
   sdk: '>=3.0.6 <4.0.0'
 
 dependencies:
-  firebase_core: ^2.15.1
+  firebase_core: ^2.16.0
   firebase_database: ^10.2.5
   flutter:
     sdk: flutter
@@ -16,7 +16,10 @@ dependencies:
   ar_flutter_plugin: 
     git:
       https://github.com/SoroushBeigi/ar_flutter_plugin.git
+  cloud_firestore: ^4.9.2
+  geoflutterfire2: ^2.3.15 
 
+      
 
 dev_dependencies:
   flutter_test:
