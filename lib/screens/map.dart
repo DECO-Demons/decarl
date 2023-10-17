@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +24,7 @@ class _MapPageState extends State<MapPage> {
   late String _mapStyleAndroid;
   late String _mapStyleIos;
 
-  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
+  Set<Marker> markerList = {};
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -42,7 +43,6 @@ class _MapPageState extends State<MapPage> {
     });
 
     super.initState();
-    addCustomIcon();
     getLocationUpdates();
   }
 
@@ -52,33 +52,22 @@ class _MapPageState extends State<MapPage> {
     Platform.isAndroid
         ? controller.setMapStyle(_mapStyleAndroid)
         : controller.setMapStyle(_mapStyleIos);
+
+    generateMarkers(widget.locationData);
   }
 
-  void addCustomIcon() {
-    BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(), "assets/marker.png")
-        .then(
-      (icon) {
-        setState(() {
-          markerIcon = icon;
-        });
-      },
-    );
-  }
-
-  Set<Marker> generateMarkers(List<List<double>> latLongList) {
-    Set<Marker> markerList = {};
-
+  void generateMarkers(List<List<double>> latLongList) async {
     for (int i = 0; i < latLongList.length; i++) {
+      double hue = pow(i, 5) % 255; // Random marker colour based on post index
+      BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarkerWithHue(hue);
+
       markerList.add(Marker(
         markerId: MarkerId(i.toString()),
         position: LatLng(latLongList[i][0], latLongList[i][1]),
         icon: markerIcon,
-        alpha: 0.5,
+        alpha: 0.75,
       ));
     }
-
-    return markerList;
   }
 
   @override
@@ -99,8 +88,7 @@ class _MapPageState extends State<MapPage> {
                   Factory<EagerGestureRecognizer>(
                       () => EagerGestureRecognizer()),
                 },
-                markers: generateMarkers(widget.locationData),
-                //circles: generateCircles(widget.locationData),
+                markers: markerList,
               ));
   }
 
