@@ -43,7 +43,7 @@ class _ExternalModelManagementWidgetState
   String lastUploadedAnchor = "";
   AvailableModel selectedModel = AvailableModel(
       "Duck",
-      "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+      "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Fox/glTF-Binary/Fox.glb",
       "");
 
   bool readyToUpload = false;
@@ -104,7 +104,7 @@ class _ExternalModelManagementWidgetState
             title: const Text('External Model Management'),
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.pets),
+                icon: Icon(Icons.settings),
                 onPressed: () {
                   setState(() {
                     modelChoiceActive = !modelChoiceActive;
@@ -166,18 +166,24 @@ class _ExternalModelManagementWidgetState
     this.arLocationManager = arLocationManager;
 
     this.arSessionManager!.onInitialize(
-          showFeaturePoints: false,
-          showPlanes: true,
-          customPlaneTexturePath: "Images/triangle.png",
-          showWorldOrigin: true,
-        );
+        showFeaturePoints: false,
+        showPlanes: true,
+        customPlaneTexturePath: "Images/triangle.png",
+        showWorldOrigin: true,
+        handlePans: true,
+        handleRotation: true);
     this.arObjectManager!.onInitialize();
     this.arAnchorManager!.initGoogleCloudAnchorMode();
 
     this.arSessionManager!.onPlaneOrPointTap = onPlaneOrPointTapped;
-    this.arObjectManager!.onNodeTap = onNodeTapped;
     this.arAnchorManager!.onAnchorUploaded = onAnchorUploaded;
     this.arAnchorManager!.onAnchorDownloaded = onAnchorDownloaded;
+    this.arObjectManager!.onPanStart = onPanStarted;
+    this.arObjectManager!.onPanChange = onPanChanged;
+    this.arObjectManager!.onPanEnd = onPanEnded;
+    this.arObjectManager!.onRotationStart = onRotationStarted;
+    this.arObjectManager!.onRotationChange = onRotationChanged;
+    this.arObjectManager!.onRotationEnd = onRotationEnded;
 
     this
         .arLocationManager!
@@ -257,26 +263,20 @@ class _ExternalModelManagementWidgetState
     }
   }
 
-  Future<void> onNodeTapped(List<String> nodeNames) async {
-    var foregroundNode =
-        nodes.firstWhere((element) => element.name == nodeNames.first);
-    this.arSessionManager!.onError(foregroundNode.data!["onTapText"]);
-  }
-
   Future<void> onPlaneOrPointTapped(
       List<ARHitTestResult> hitTestResults) async {
     var singleHitTestResult = hitTestResults.firstWhere(
         (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
     if (singleHitTestResult != null) {
       var newAnchor = ARPlaneAnchor(
-          transformation: singleHitTestResult.worldTransform, ttl: 2);
+          transformation: singleHitTestResult.worldTransform, ttl: 1);
       bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
       if (didAddAnchor!) {
         this.anchors.add(newAnchor);
         // Add note to anchor
         var newNode = ARNode(
             type: NodeType.webGLB,
-            uri: this.selectedModel.uri,
+            uri: this.selectedModel.uri.toString(),
             scale: VectorMath.Vector3(0.2, 0.2, 0.2),
             position: VectorMath.Vector3(0.0, 0.0, 0.0),
             rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
@@ -296,6 +296,37 @@ class _ExternalModelManagementWidgetState
         this.arSessionManager!.onError("Adding Anchor failed");
       }
     }
+  }
+
+  onPanStarted(String nodeName) {
+    print("Started panning node " + nodeName);
+  }
+
+  onPanChanged(String nodeName) {
+    print("Continued panning node " + nodeName);
+  }
+
+  onPanEnded(String nodeName, Matrix4 newTransform) {
+    print("Ended panning node " + nodeName);
+    final pannedNode =
+        this.nodes.firstWhere((element) => element.name == nodeName);
+    pannedNode.transform = newTransform;
+  }
+
+  onRotationStarted(String nodeName) {
+    print("Started rotating node " + nodeName);
+  }
+
+  onRotationChanged(String nodeName) {
+    print("Continued rotating node " + nodeName);
+  }
+
+  onRotationEnded(String nodeName, Matrix4 newTransform) {
+    print("Ended rotating node " + nodeName);
+    final rotatedNode =
+        this.nodes.firstWhere((element) => element.name == nodeName);
+
+    rotatedNode.transform = newTransform;
   }
 
   Future<void> onUploadButtonPressed() async {
@@ -557,6 +588,7 @@ class _ModelSelectionWidgetState extends State<ModelSelectionWidget> {
     widget.firebaseManager.downloadAvailableModels((snapshot) {
       snapshot.docs.forEach((element) {
         setState(() {
+          print(element.get("uri"));
           models.add(AvailableModel(
               element.get("name"), element.get("uri"), element.get("image")));
         });

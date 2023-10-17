@@ -51,7 +51,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home:
-            arApp()); /* Scaffold(
+            ExternalModelManagementWidget()); /* Scaffold( ExternalModelManagementWidget()
           appBar: AppBar(
             title: const Center(child: Text('Decarl Test')),
             actions: [
