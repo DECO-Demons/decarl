@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,8 +23,7 @@ class _MapPageState extends State<MapPage> {
   late String _mapStyleAndroid;
   late String _mapStyleIos;
 
-  double zoomLevel = 13.0;
-  Set<Circle> circles = {};
+  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -44,8 +42,8 @@ class _MapPageState extends State<MapPage> {
     });
 
     super.initState();
+    addCustomIcon();
     getLocationUpdates();
-    circles = generateCircles(widget.locationData);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -56,24 +54,31 @@ class _MapPageState extends State<MapPage> {
         : controller.setMapStyle(_mapStyleIos);
   }
 
-  Set<Circle> generateCircles(List<List<double>> latLongList) {
-    Set<Circle> circleList = {};
-    double radius = 0.0 + pow(5, 1 / (zoomLevel / 50));
+  void addCustomIcon() {
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(), "assets/marker.png")
+        .then(
+      (icon) {
+        setState(() {
+          markerIcon = icon;
+        });
+      },
+    );
+  }
+
+  Set<Marker> generateMarkers(List<List<double>> latLongList) {
+    Set<Marker> markerList = {};
 
     for (int i = 0; i < latLongList.length; i++) {
-      circleList.add(
-        Circle(
-            circleId: CircleId(i.toString()),
-            center: LatLng(latLongList[i][0], latLongList[i][1]),
-            radius: radius,
-            fillColor: const Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
-            strokeColor: const Color.fromARGB(0, 0, 0, 0).withOpacity(0)),
-      );
+      markerList.add(Marker(
+        markerId: MarkerId(i.toString()),
+        position: LatLng(latLongList[i][0], latLongList[i][1]),
+        icon: markerIcon,
+        alpha: 0.5,
+      ));
     }
 
-    print(circleList);
-
-    return circleList;
+    return markerList;
   }
 
   @override
@@ -86,10 +91,6 @@ class _MapPageState extends State<MapPage> {
                 onMapCreated: _onMapCreated,
                 rotateGesturesEnabled: false,
                 myLocationButtonEnabled: false,
-                onCameraMove: (CameraPosition position) {
-                  zoomLevel = position.zoom;
-                  circles = generateCircles(widget.locationData);
-                },
                 initialCameraPosition: CameraPosition(
                   target: _currentPos!,
                   zoom: 13,
@@ -98,7 +99,8 @@ class _MapPageState extends State<MapPage> {
                   Factory<EagerGestureRecognizer>(
                       () => EagerGestureRecognizer()),
                 },
-                circles: circles,
+                markers: generateMarkers(widget.locationData),
+                //circles: generateCircles(widget.locationData),
               ));
   }
 

@@ -11,7 +11,6 @@ List<List<double>> posData = [];
 
 void main() async {
   List<String> rawPosData = await fetchArtData();
-  //print(posList);
 
   for (var str in rawPosData) {
     List<String> parts = str.split(',');
@@ -19,8 +18,6 @@ void main() async {
     double second = double.parse(parts[1]);
     posData.add([first, second]);
   }
-
-  //print(posData);
 
   runApp(const MainApp());
 }
