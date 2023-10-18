@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
-  final List<List<double>> locationData;
+  final List<List<double>> locationData; // List of parsed lat/long pairs
 
   const MapPage({Key? key, required this.locationData}) : super(key: key);
 
@@ -21,17 +20,24 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  // Styles for GMaps component
   late String _mapStyleAndroid;
   late String _mapStyleIos;
 
+  // List of Marker components to be rendered
   Set<Marker> markerList = {};
 
+  // Controller for GMaps component
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
+  // Controller for Location component
   final Location _locationController = Location();
-  LatLng? _currentPos;
+  LatLng? _currentPos; // User's current location
 
+  /* void initState()
+    Callback function for when the widget is created
+  */
   @override
   void initState() {
     // Map style for Android must load from .txt, for iOS from .json
@@ -43,22 +49,34 @@ class _MapPageState extends State<MapPage> {
     });
 
     super.initState();
-    getLocationUpdates();
+    getLocationUpdates(); // Get user's current location
   }
 
+  /* _onMapCreated(GoogleMapController controller)
+    Callback function for when the GoogleMap component is created
+
+    Args:
+      controller (GoogleMapController): Controller for the GoogleMap component
+  */
   void _onMapCreated(GoogleMapController controller) {
     _mapController.complete(controller);
 
-    Platform.isAndroid
+    Platform.isAndroid // Set map style based on platform
         ? controller.setMapStyle(_mapStyleAndroid)
         : controller.setMapStyle(_mapStyleIos);
 
-    generateMarkers(widget.locationData);
+    generateMarkers(widget.locationData); // Generate markers from data
   }
 
+  /* void generateMarkers(List<List<double>> latLongList)
+    Generates a list of Marker components from a list of lat/long pairs 
+
+    Args:
+      latLongList (List<List<double>>): List of lat/long pairs
+  */
   void generateMarkers(List<List<double>> latLongList) async {
     for (int i = 0; i < latLongList.length; i++) {
-      double hue = pow(i, 5) % 255; // Random marker colour based on post index
+      double hue = (i * 73) % 255; // Generate hue based on post index
       BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarkerWithHue(hue);
 
       markerList.add(Marker(
@@ -70,6 +88,15 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  /* Widget build(BuildContext context)
+    Builds the MapPage widget
+
+    Args:
+      context (BuildContext): Context of the widget
+
+    Returns:
+      Container: Container containing the GoogleMap component
+  */
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,10 +119,14 @@ class _MapPageState extends State<MapPage> {
               ));
   }
 
+  /* Future<void> getLocationUpdates()
+    Gets user's current location and updates _currentPos
+  */
   Future<void> getLocationUpdates() async {
     bool serviceEnabled;
     PermissionStatus permissionGranted;
 
+    // Check if location services are enabled
     serviceEnabled = await _locationController.serviceEnabled();
     if (serviceEnabled) {
       serviceEnabled = await _locationController.requestService();
@@ -103,6 +134,7 @@ class _MapPageState extends State<MapPage> {
       return;
     }
 
+    // Check if location permissions are granted
     permissionGranted = await _locationController.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await _locationController.requestPermission();
@@ -116,6 +148,7 @@ class _MapPageState extends State<MapPage> {
       if (currentLocation.latitude != null &&
           currentLocation.longitude != null) {
         if (mounted) {
+          // If widget is currently rendered, update _currentPos
           setState(() {
             _currentPos =
                 LatLng(currentLocation.latitude!, currentLocation.longitude!);
