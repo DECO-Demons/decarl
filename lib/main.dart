@@ -10,7 +10,23 @@ import 'screens/ar.dart' show arApp;
 import 'screens/map.dart' show MapPage;
 import 'screens/home.dart' show HomePage;
 
+List<List<double>> posData = [];
+
 void main() async {
+  List<String> rawPosData = await fetchArtData();
+
+  for (var str in rawPosData) {
+    List<String> parts = str.split(',');
+    double first = double.parse(parts[0]);
+    double second = double.parse(parts[1]);
+    posData.add([first, second]);
+  }
+
+  runApp(const MainApp());
+}
+
+Future<List<String>> fetchArtData() async {
+  List<String> artList = [];
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -18,14 +34,23 @@ void main() async {
   );
 
   final ref = FirebaseDatabase.instance.ref();
-  final snapshot = await ref.child('art/1').get();
+  final snapshot = await ref.child('art').get();
   if (snapshot.exists) {
-    print(snapshot.value);
+    Object? data = snapshot.value;
+
+    if (data is List) {
+      for (var entry in data) {
+        if (entry != null) {
+          //print(entry["lat_lon"]);
+          artList.add(entry["lat_lon"]);
+        }
+      }
+    }
   } else {
     print('No data available.');
   }
 
-  runApp(const MainApp());
+  return artList;
 }
 
 class MainApp extends StatefulWidget {
@@ -67,9 +92,11 @@ class _MainAppState extends State<MainApp> {
             controller: _pageController,
             scrollDirection: Axis.horizontal,
             // All pages
-            children: const [
-              HomePage(),
-              MapPage(),
+            children: [
+              const HomePage(),
+              MapPage(
+                locationData: posData,
+              ),
             ],
           )), */
   }
