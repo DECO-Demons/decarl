@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,6 +69,57 @@ class _MapPageState extends State<MapPage> {
     generateMarkers(widget.locationData); // Generate markers from data
   }
 
+  /* double distance(LatLng point1, LatLng point2)
+    Calculates the distance between two lat/long pairs
+
+    Args:
+      point1 (LatLng): First lat/long pair
+      point2 (LatLng): Second lat/long pair
+
+    Returns:
+      double: Distance between the two lat/long pairs
+  */
+  double distance(LatLng? currentPos, LatLng point2) {
+    const int r = 6371; // km
+    const double p = pi / 180;
+
+    double a = 0.5 -
+        cos((point2.latitude - currentPos!.latitude) * p) / 2 +
+        cos(currentPos.latitude * p) *
+            cos(point2.latitude * p) *
+            (1 - cos((point2.longitude - currentPos.longitude) * p)) /
+            2;
+
+    return 2 * r * asin(sqrt(a));
+  }
+
+  /* double hueFromDistance(double distance)
+    Calculates the hue of a marker based on its distance from the user
+
+    Args:
+      distance (double): Distance between the marker and the user
+
+    Returns:
+      double: Hue of the marker
+  */
+  double hueFromDistance(double distance) {
+    Map<double, double> hueMap = {
+      50: BitmapDescriptor.hueRed,
+      500: BitmapDescriptor.hueOrange,
+      1000: BitmapDescriptor.hueYellow,
+      5000: BitmapDescriptor.hueGreen,
+      10000: BitmapDescriptor.hueBlue,
+    };
+
+    for (var key in hueMap.keys) {
+      if (distance <= key) {
+        return hueMap[key]!;
+      }
+    }
+
+    return BitmapDescriptor.hueViolet;
+  }
+
   /* void generateMarkers(List<List<double>> latLongList)
     Generates a list of Marker components from a list of lat/long pairs 
 
@@ -76,7 +128,11 @@ class _MapPageState extends State<MapPage> {
   */
   void generateMarkers(List<List<double>> latLongList) async {
     for (int i = 0; i < latLongList.length; i++) {
-      double hue = (i * 73) % 255; // Generate hue based on post index
+      double distanceFromUser =
+          distance(_currentPos, LatLng(latLongList[i][0], latLongList[i][1]));
+      double hue = hueFromDistance(distanceFromUser);
+
+      //double hue = (i * 73) % 255; // Generate hue based on post index
       BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarkerWithHue(hue);
 
       markerList.add(Marker(
