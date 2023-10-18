@@ -1,12 +1,11 @@
 import 'package:decarl/screens/ar.dart';
-import 'package:decarl/screens/externalmodelmanagementexample.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'firebase_options.dart';
-import 'screens/ar.dart' show arApp;
+import 'screens/ar.dart' show ARWidget;
 import 'screens/map.dart' show MapPage;
 import 'screens/home.dart' show HomePage;
 
@@ -82,7 +81,7 @@ class _MainAppState extends State<MainApp> {
                 IconButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => arApp(),
+                        builder: (context) => ARWidget(),
                       ));
                     },
                     icon: Icon(Icons.camera))
@@ -93,7 +92,7 @@ class _MainAppState extends State<MainApp> {
               scrollDirection: Axis.horizontal,
               // All pages
               children: [
-                ExternalModelManagementWidget(),
+                ARWidget(),
                 const HomePage(),
                 MapPage(
                   locationData: posData,
