@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "609017027503",
+    "firebase_url": "https://decarl-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "decarl",
+    "storage_bucket": "decarl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609017027503:android:d1a1f5da590fe22eea2d5a",
+        "android_client_info": {
+          "package_name": "com.example.decarl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609017027503-es09va3qh7v0kkj9n7s483rpriq0or47.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCG_YH7UpuRXoFqwshRvjBa7h6tgKLata4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609017027503-es09va3qh7v0kkj9n7s483rpriq0or47.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "609017027503-mrb4io32ui8pg33qvb857v5eii5ds68t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.decarl.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
