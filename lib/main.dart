@@ -63,7 +63,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   final _pageController = PageController(
     // Index of home screen
-    initialPage: 0,
+    initialPage: 1,
   );
 
   @override
@@ -75,29 +75,30 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home:
-            ExternalModelManagementWidget()); /* Scaffold( ExternalModelManagementWidget()
-          appBar: AppBar(
-            title: const Center(child: Text('Decarl Test')),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => arApp(),));
-                  },
-                  icon: Icon(Icons.camera))
-            ],
-          ),
-          body: PageView(
-            controller: _pageController,
-            scrollDirection: Axis.horizontal,
-            // All pages
-            children: [
-              const HomePage(),
-              MapPage(
-                locationData: posData,
-              ),
-            ],
-          )), */
+        home: Scaffold(
+            appBar: AppBar(
+              title: const Center(child: Text('Decarl Test')),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => arApp(),
+                      ));
+                    },
+                    icon: Icon(Icons.camera))
+              ],
+            ),
+            body: PageView(
+              controller: _pageController,
+              scrollDirection: Axis.horizontal,
+              // All pages
+              children: [
+                ExternalModelManagementWidget(),
+                const HomePage(),
+                MapPage(
+                  locationData: posData,
+                ),
+              ],
+            )));
   }
 }
