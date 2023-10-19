@@ -21,23 +21,25 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      floatingActionButton:
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
         NavbarItem(
+          index: 0,
           icon: Icon(Icons.home_outlined),
           bottomPad: 8.0,
         ),
         NavbarItem(
+          index: 1,
           icon: Icon(Icons.map_outlined),
           bottomPad: 32.0,
         ),
         NavbarItem(
+          index: 2,
           icon: Icon(Icons.travel_explore),
           bottomPad: 8.0,
         ),
-      ]),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ],
     );
   }
 }

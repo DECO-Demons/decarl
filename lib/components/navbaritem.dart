@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class NavbarItem extends StatefulWidget {
   final Icon icon;
   final double bottomPad;
-  const NavbarItem({Key? key, required this.icon, required this.bottomPad})
+  final int index;
+  const NavbarItem(
+      {Key? key,
+      required this.icon,
+      required this.bottomPad,
+      required this.index})
       : super(key: key);
 
   @override
@@ -25,7 +30,9 @@ class _NavbarItemState extends State<NavbarItem> {
         padding:
             EdgeInsets.only(left: 8.0, right: 8.0, bottom: widget.bottomPad),
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            print(widget.index);
+          },
           child: widget.icon,
         ));
   }

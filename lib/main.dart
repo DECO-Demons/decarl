@@ -75,24 +75,30 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Center(child: Text('Decarl Test')),
-            ),
-            body: const Navbar(
-                selectedIndex:
-                    1) /*PageView(
-        controller: _pageController,
-        scrollDirection: Axis.horizontal,
-        // All pages
-        children: [
-          ARWidget(),
-          const HomePage(),
-          MapPage(
-            locationData: posData,
+        home: Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Center(child: Text('Decarl Test')),
           ),
-        ],
-      ),*/
-            ));
+          body: PageView(
+            controller: _pageController,
+            scrollDirection: Axis.horizontal,
+            // All pages
+            children: [
+              ARWidget(),
+              const HomePage(),
+              MapPage(
+                locationData: posData,
+              ),
+            ],
+          ),
+        ),
+        const Align(
+            alignment: Alignment.bottomCenter,
+            // Navbar
+            child: Navbar(selectedIndex: 1)),
+      ],
+    ));
   }
 }
