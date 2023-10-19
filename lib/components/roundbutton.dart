@@ -6,8 +6,7 @@ class RoundButton extends StatefulWidget {
   final int? index; // The index of this button
 
   final Function(int)? onPress;
-  final Function(String)? onPressRoute;
-  final String? prevPage;
+  final Function()? onPressRoute;
 
   final Color color;
   final Color pressedColor;
@@ -18,7 +17,6 @@ class RoundButton extends StatefulWidget {
       this.index,
       this.onPress,
       this.onPressRoute,
-      this.prevPage,
       required this.color,
       required this.pressedColor})
       : super(key: key);
@@ -61,7 +59,7 @@ class _RoundButtonState extends State<RoundButton> {
             if (widget.onPress != null) {
               widget.onPress!(widget.index!);
             } else if (widget.onPressRoute != null) {
-              widget.onPressRoute!(widget.prevPage!);
+              widget.onPressRoute!();
             }
           },
           child: widget.icon,

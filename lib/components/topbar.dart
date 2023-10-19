@@ -5,11 +5,9 @@ import 'appcolors.dart';
 
 class TopBar extends StatefulWidget {
   final String heading;
-  final Function(String)? onPressRoute;
-  final String? prevPage;
+  final Function()? onPressRoute;
 
-  const TopBar(
-      {Key? key, required this.heading, this.onPressRoute, this.prevPage})
+  const TopBar({Key? key, required this.heading, this.onPressRoute})
       : super(key: key);
 
   @override
@@ -64,7 +62,6 @@ class _TopBarState extends State<TopBar> {
                     color: AppColors.grey900,
                   ),
                   onPressRoute: widget.onPressRoute,
-                  prevPage: widget.prevPage,
                   color: AppColors.tertiary500,
                   pressedColor: AppColors.tertiary600),
             Text(widget.heading,

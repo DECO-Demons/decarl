@@ -13,73 +13,85 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-          child: CustomTextBox(
-            heading: "This is a test textbox with an expandable heading",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
-                'Cras laoreet convallis varius.',
-            color: AppColors.secondary200,
-            expandable: true,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-          child: CustomTextBox(
-            heading: "This is a test textbox",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
-                'Cras laoreet convallis varius.',
-            color: AppColors.secondary200,
-            expandable: false,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-          child: CustomTextBox(
-            heading: "This is a test textbox with an expandable heading",
-            color: AppColors.secondary200,
-            expandable: false,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-          child: CustomTextBox(
-            heading: "This is a test textbox with an expandable heading",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
-                'Cras laoreet convallis varius.',
-            color: AppColors.secondary200,
-            expandable: true,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-          child: CustomTextBox(
-            heading: "This is a test textbox with an expandable heading",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
-                'Cras laoreet convallis varius.',
-            color: AppColors.secondary200,
-            expandable: true,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-          child: CustomTextBox(
-            heading: "This is a test textbox with an expandable heading",
-            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
-                'Cras laoreet convallis varius.',
-            color: AppColors.secondary200,
-            expandable: true,
-          ),
-        ),
-      ],
-    );
+    return const Expanded(
+        child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                  child: CustomTextBox(
+                    heading:
+                        "This is a test textbox with an expandable heading",
+                    body:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                        'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
+                        'Cras laoreet convallis varius.',
+                    color: AppColors.secondary200,
+                    expandable: true,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                  child: CustomTextBox(
+                    heading: "This is a test textbox",
+                    body:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                        'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
+                        'Cras laoreet convallis varius.',
+                    color: AppColors.secondary200,
+                    expandable: false,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                  child: CustomTextBox(
+                    heading: "User screen",
+                    color: AppColors.secondary200,
+                    expandable: false,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                  child: CustomTextBox(
+                    heading:
+                        "This is a test textbox with an expandable heading",
+                    body:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                        'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
+                        'Cras laoreet convallis varius.',
+                    color: AppColors.secondary200,
+                    expandable: true,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                  child: CustomTextBox(
+                    heading:
+                        "This is a test textbox with an expandable heading",
+                    body:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                        'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
+                        'Cras laoreet convallis varius.',
+                    color: AppColors.secondary200,
+                    expandable: true,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                  child: CustomTextBox(
+                    heading:
+                        "This is a test textbox with an expandable heading",
+                    body:
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                        'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
+                        'Cras laoreet convallis varius.',
+                    color: AppColors.secondary200,
+                    expandable: true,
+                  ),
+                ),
+              ],
+            )));
   }
 }
