@@ -5,9 +5,9 @@ import 'appcolors.dart';
 
 class TopBar extends StatefulWidget {
   final String heading;
-  final int? prevPageIndex;
+  final String? prevPage;
 
-  const TopBar({Key? key, required this.heading, this.prevPageIndex})
+  const TopBar({Key? key, required this.heading, this.prevPage})
       : super(key: key);
 
   @override
