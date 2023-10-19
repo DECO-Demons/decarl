@@ -5,6 +5,13 @@ import 'appcolors.dart';
 class CustomTextBox extends StatefulWidget {
   final String? heading;
   final String? body;
+  final double? headingSize;
+  final double? bodySize;
+  final int? headingWeight;
+  final int? bodyWeight;
+
+  final double? betweenPadding;
+
   final double? padding;
   final Color color;
   final bool? expandable;
@@ -22,7 +29,12 @@ class CustomTextBox extends StatefulWidget {
       this.expandable,
       this.center,
       this.image,
-      this.imageRounded})
+      this.imageRounded,
+      this.headingSize,
+      this.bodySize,
+      this.headingWeight,
+      this.bodyWeight,
+      this.betweenPadding = 16})
       : super(key: key);
 
   @override
@@ -91,43 +103,61 @@ class _TextBoxState extends State<CustomTextBox> {
                     : widget.image,
               ),
               Expanded(
-                child: Column(children: [
-                  if (widget.heading != null)
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: (!isExpandable || isExpanded) &&
-                                  widget.body != null
-                              ? 16
-                              : 0),
-                      child: Row(children: [
-                        Expanded(
-                          child: Text(widget.heading!,
-                              textAlign: widget.center != null && widget.center!
-                                  ? TextAlign.center
-                                  : TextAlign.start,
-                              style: const TextStyle(
-                                  color: AppColors.grey900,
-                                  decoration: TextDecoration.none,
-                                  fontWeight: FontWeight.bold)),
+                child: Column(
+                    crossAxisAlignment: widget.center != true
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.center,
+                    children: [
+                      if (widget.heading != null)
+                        Padding(
+                          padding: EdgeInsets.only(
+                              bottom: (!isExpandable || isExpanded) &&
+                                      widget.body != null
+                                  ? widget.betweenPadding!
+                                  : 0),
+                          child: Row(children: [
+                            Expanded(
+                              child: Text(widget.heading!,
+                                  textAlign:
+                                      widget.center != null && widget.center!
+                                          ? TextAlign.center
+                                          : TextAlign.start,
+                                  style: TextStyle(
+                                      color: AppColors.grey900,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: widget.headingWeight != null
+                                          ? FontWeight
+                                              .values[widget.headingWeight!]
+                                          : FontWeight.w800,
+                                      fontSize: widget.headingSize != null
+                                          ? widget.headingSize
+                                          : 18)),
+                            ),
+                            isExpandable
+                                ? IconButton(
+                                    onPressed: expandBox,
+                                    icon: Icon(isExpanded
+                                        ? LucideIcons.minus
+                                        : LucideIcons.plus))
+                                : const SizedBox.shrink(),
+                          ]),
                         ),
-                        isExpandable
-                            ? IconButton(
-                                onPressed: expandBox,
-                                icon: Icon(isExpanded
-                                    ? LucideIcons.minus
-                                    : LucideIcons.plus))
-                            : const SizedBox.shrink(),
-                      ]),
-                    ),
-                  if ((!isExpandable || isExpanded) && widget.body != null)
-                    Text(widget.body!,
-                        textAlign: widget.center != null && widget.center!
-                            ? TextAlign.center
-                            : TextAlign.start,
-                        style: const TextStyle(
-                            color: AppColors.grey900,
-                            decoration: TextDecoration.none))
-                ]),
+                      if ((!isExpandable || isExpanded) && widget.body != null)
+                        Text(widget.body!,
+                            textAlign: widget.center != null && widget.center!
+                                ? TextAlign.center
+                                : TextAlign.start,
+                            style: TextStyle(
+                              color: AppColors.grey900,
+                              decoration: TextDecoration.none,
+                              fontWeight: widget.bodyWeight != null
+                                  ? FontWeight.values[widget.bodyWeight!]
+                                  : FontWeight.w500,
+                              fontSize: widget.bodySize != null
+                                  ? widget.bodySize
+                                  : 14,
+                            ))
+                    ]),
               ),
             ],
           )),

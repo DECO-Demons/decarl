@@ -17,7 +17,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const TopBar(heading: "Home", onPress: null),
+        const TopBar(
+            heading: Text("Home",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
+            onPress: null),
         Expanded(
             child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 24, bottom: 96),

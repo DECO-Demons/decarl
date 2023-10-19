@@ -4,7 +4,7 @@ import 'roundbutton.dart';
 import 'appcolors.dart';
 
 class TopBar extends StatefulWidget {
-  final String heading;
+  final Widget heading;
   final Function(int)? onPress;
   final int? index;
 
@@ -66,11 +66,7 @@ class _TopBarState extends State<TopBar> {
                   index: widget.index,
                   color: AppColors.tertiary500,
                   pressedColor: AppColors.tertiary600),
-            Text(widget.heading,
-                style: const TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Public Sans',
-                    fontWeight: FontWeight.w900)),
+            widget.heading,
           ]),
     );
   }

@@ -186,12 +186,13 @@ class _MapPageState extends State<MapPage> {
                   heightFactor: 2.5,
                   child: SizedBox(
                       width: 200,
-                      height: 52,
+                      height: 55,
                       child: CustomTextBox(
                         color: AppColors.tertiary500,
                         heading: "Artwork Map",
                         center: true,
                         padding: 16,
+                        headingSize: 16,
                       )),
                 ),
               ],
