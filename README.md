@@ -9,11 +9,13 @@ and explore digital art, displayed in their physical environment with AR.
 
 ### Flutter
 
-[](https://docs.flutter.dev/get-started/install)
+Please follow Flutter's official installation instructions at
+[https://docs.flutter.dev/get-started/install](https://docs.flutter.dev/get-started/install)
 
 ### Android Studio
 
-[](https://developer.android.com/studio/install)
+Please follow Android Studio's official installation instructions at
+[https://developer.android.com/studio/install](https://developer.android.com/studio/install)
 
 #### Emulator
 
