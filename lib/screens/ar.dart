@@ -1,22 +1,20 @@
-import 'dart:convert';
-
-import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
-import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
-import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
-import 'package:ar_flutter_plugin/managers/ar_anchor_manager.dart';
-import 'package:ar_flutter_plugin/models/ar_anchor.dart';
-import 'package:flutter/material.dart';
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
-import 'package:ar_flutter_plugin/datatypes/node_types.dart';
 import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
-import 'package:ar_flutter_plugin/models/ar_node.dart';
+import 'package:ar_flutter_plugin/datatypes/node_types.dart';
+import 'package:ar_flutter_plugin/managers/ar_anchor_manager.dart';
+import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
+import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
+import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
+import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
+import 'package:ar_flutter_plugin/models/ar_node.dart';
+import 'package:decarl/components/appcolors.dart';
+import 'package:decarl/components/roundbutton.dart';
+import 'package:decarl/firebase_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:vector_math/vector_math_64.dart' as VectorMath;
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:geolocator/geolocator.dart';
 
 class ARWidget extends StatefulWidget {
   ARWidget({Key? key}) : super(key: key);
@@ -24,6 +22,10 @@ class ARWidget extends StatefulWidget {
   _ARWidgetState createState() =>
       _ARWidgetState();
 }
+
+Object initialArSessionManagerOpts = {
+
+};
 
 class _ARWidgetState
     extends State<ARWidget> {
@@ -46,8 +48,8 @@ class _ARWidgetState
       "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Fox/glTF-Binary/Fox.glb",
       "");
 
-  bool readyToUpload = false;
-  bool readyToDownload = true;
+  bool choosingModel = false;
+  bool placingModel = false;
   bool modelChoiceActive = false;
 
   @override
@@ -64,6 +66,7 @@ class _ARWidgetState
   void dispose() {
     super.dispose();
     arSessionManager!.dispose();
+    print("Disposed AR screen");
   }
 
   @override
@@ -71,9 +74,9 @@ class _ARWidgetState
     // Show error message if initialization failed
     if (_error) {
       return Scaffold(
-          appBar: AppBar(
-            title: const Text('External Model Management'),
-          ),
+          // appBar: AppBar(
+          //   title: const Text('External Model Management'),
+          // ),
           body: Container(
               child: Center(
                   child: Column(
@@ -88,9 +91,9 @@ class _ARWidgetState
     // Show a loader until FlutterFire is initialized
     if (!_initialized) {
       return Scaffold(
-          appBar: AppBar(
-            title: const Text('External Model Management'),
-          ),
+          // appBar: AppBar(
+          //   title: const Text('External Model Management'),
+          // ),
           body: Container(
               child: Center(
                   child: Column(children: [
@@ -100,50 +103,71 @@ class _ARWidgetState
     }
 
     return Scaffold(
-        appBar: AppBar(
-            title: const Text('External Model Management'),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () {
-                  setState(() {
-                    modelChoiceActive = !modelChoiceActive;
-                  });
-                },
-              ),
-            ]),
         body: Container(
             child: Stack(children: [
           ARView(
             onARViewCreated: onARViewCreated,
             planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
           ),
-          Align(
-            alignment: FractionalOffset.bottomCenter,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                      onPressed: onRemoveEverything,
-                      child: Text("Remove Everything")),
-                ]),
-          ),
-          Align(
-            alignment: FractionalOffset.topCenter,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Visibility(
-                      visible: readyToUpload,
-                      child: ElevatedButton(
-                          onPressed: onUploadButtonPressed,
-                          child: Text("Upload"))),
-                  Visibility(
-                      visible: readyToDownload,
-                      child: ElevatedButton(
-                          onPressed: onDownloadButtonPressed,
-                          child: Text("Download"))),
-                ]),
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.only(top: 62),
+            child: Align(
+              alignment: FractionalOffset.topCenter,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RoundButton(
+                      icon: const Icon(
+                        LucideIcons.boxes,
+                        color: AppColors.grey900,
+                      ),
+                      onPress: () {
+                        setState(() {
+                          modelChoiceActive = !modelChoiceActive;
+                        });
+                      },
+                      color: AppColors.tertiary500,
+                      pressedColor: AppColors.tertiary700,
+                    ),
+                    SizedBox(width: 10),
+                    RoundButton(
+                      icon: const Icon(
+                        LucideIcons.refreshCw,
+                        color: AppColors.grey900,
+                      ),
+                      onPress: refreshAnchors,
+                      color: AppColors.tertiary500,
+                      pressedColor: AppColors.tertiary700,
+                    ),
+                    SizedBox(width: 10),
+                    Visibility(
+                      visible: !placingModel,
+                      child: RoundButton(
+                        icon: const Icon(
+                          LucideIcons.plus,
+                          color: AppColors.grey900,
+                        ),
+                        onPress: startPlacingAnchor,
+                        color: AppColors.tertiary500,
+                        pressedColor: AppColors.tertiary700,
+                      )
+                    ),
+                    Visibility(
+                      visible: placingModel,
+                      child: RoundButton(
+                        icon: const Icon(
+                          LucideIcons.check,
+                          color: AppColors.grey900,
+                        ),
+                        onPress: uploadLatestAnchor,
+                        color: AppColors.primary500,
+                        pressedColor: AppColors.primary700,
+                      )
+                    ),
+                  ]
+              ),
+            ),
           ),
           Align(
               alignment: FractionalOffset.centerLeft,
@@ -166,13 +190,9 @@ class _ARWidgetState
     this.arLocationManager = arLocationManager;
 
     this.arSessionManager!.onInitialize(
-        showFeaturePoints: false,
-        showPlanes: true,
+        showPlanes: false,
         customPlaneTexturePath: "Images/triangle.png",
-        showWorldOrigin: true,
-        handlePans: true,
-        handleRotation: true);
-    this.arObjectManager!.onInitialize();
+    );
     this.arAnchorManager!.initGoogleCloudAnchorMode();
 
     this.arSessionManager!.onPlaneOrPointTap = onPlaneOrPointTapped;
@@ -237,30 +257,62 @@ class _ARWidgetState
     });
   }
 
+  void startPlacingAnchor() {
+    setState(() {
+        placingModel = true;
+    });
+    arSessionManager!.onInitialize(
+        showPlanes: true,
+        handlePans: true,
+        handleRotation: true,
+    );
+  }
+  
+  Future<void> uploadLatestAnchor() async {
+    this.arAnchorManager!.uploadAnchor(this.anchors.last);
+    setState(() {
+      placingModel = false;
+    });
+    this.arSessionManager!.onInitialize(
+        showPlanes: false,
+        customPlaneTexturePath: "Images/triangle.png",
+    );
+  }
+  
+  Future<void> downloadAnchors() async {
+    // Get anchors within a radius of 100m of the current device's location
+    if (this.arLocationManager!.currentLocation != null) {
+      firebaseManager.downloadAnchorsByLocation((snapshot) {
+        final cloudAnchorId = snapshot.get("cloudanchorid");
+        anchorsInDownloadProgress[cloudAnchorId] =
+            snapshot.data() as Map<String, dynamic>;
+        arAnchorManager!.downloadAnchor(cloudAnchorId);
+      }, this.arLocationManager!.currentLocation, 0.1);
+    } else {
+      this
+          .arSessionManager!
+          .onError("Location updates not running, can't download anchors");
+    }
+  }
+  
+  Future<void> removeVisibleAnchors() async {
+    anchors.forEach((anchor) {
+      this.arAnchorManager!.removeAnchor(anchor);
+    });
+    anchors = [];
+  }
+
+  Future<void> refreshAnchors() async {
+    await removeVisibleAnchors();
+    await downloadAnchors();
+  }
+
   void onModelSelected(AvailableModel model) {
     this.selectedModel = model;
     this.arSessionManager!.onError(model.name + " selected");
     setState(() {
       modelChoiceActive = false;
     });
-  }
-
-  Future<void> onRemoveEverything() async {
-    anchors.forEach((anchor) {
-      this.arAnchorManager!.removeAnchor(anchor);
-    });
-    anchors = [];
-    if (lastUploadedAnchor != "") {
-      setState(() {
-        readyToDownload = true;
-        readyToUpload = false;
-      });
-    } else {
-      setState(() {
-        readyToDownload = true;
-        readyToUpload = false;
-      });
-    }
   }
 
   Future<void> onPlaneOrPointTapped(
@@ -273,7 +325,7 @@ class _ARWidgetState
       bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
       if (didAddAnchor!) {
         this.anchors.add(newAnchor);
-        // Add note to anchor
+        // Add node to anchor
         var newNode = ARNode(
             type: NodeType.webGLB,
             uri: this.selectedModel.uri.toString(),
@@ -286,9 +338,6 @@ class _ARWidgetState
             .addNode(newNode, planeAnchor: newAnchor);
         if (didAddNodeToAnchor!) {
           this.nodes.add(newNode);
-          setState(() {
-            readyToUpload = true;
-          });
         } else {
           this.arSessionManager!.onError("Adding Node to Anchor failed");
         }
@@ -300,6 +349,8 @@ class _ARWidgetState
 
   onPanStarted(String nodeName) {
     print("Started panning node " + nodeName);
+    // If in edit mode do nothing
+    // If not in edit mode, open modal with info
   }
 
   onPanChanged(String nodeName) {
@@ -329,13 +380,6 @@ class _ARWidgetState
     rotatedNode.transform = newTransform;
   }
 
-  Future<void> onUploadButtonPressed() async {
-    this.arAnchorManager!.uploadAnchor(this.anchors.last);
-    setState(() {
-      readyToUpload = false;
-    });
-  }
-
   onAnchorUploaded(ARAnchor anchor) {
     // Upload anchor information to firebase
     firebaseManager.uploadAnchor(anchor,
@@ -346,8 +390,7 @@ class _ARWidgetState
           nodes.firstWhere((element) => element.name == nodeName)));
     }
     setState(() {
-      readyToDownload = true;
-      readyToUpload = false;
+      placingModel = false;
     });
     this.arSessionManager!.onError("Upload successful");
   }
@@ -372,31 +415,6 @@ class _ARWidgetState
     return anchor;
   }
 
-  Future<void> onDownloadButtonPressed() async {
-    //this.arAnchorManager.downloadAnchor(lastUploadedAnchor);
-    //firebaseManager.downloadLatestAnchor((snapshot) {
-    //  final cloudAnchorId = snapshot.docs.first.get("cloudanchorid");
-    //  anchorsInDownloadProgress[cloudAnchorId] = snapshot.docs.first.data();
-    //  arAnchorManager.downloadAnchor(cloudAnchorId);
-    //});
-
-    // Get anchors within a radius of 100m of the current device's location
-    if (this.arLocationManager!.currentLocation != null) {
-      firebaseManager.downloadAnchorsByLocation((snapshot) {
-        final cloudAnchorId = snapshot.get("cloudanchorid");
-        anchorsInDownloadProgress[cloudAnchorId] =
-            snapshot.data() as Map<String, dynamic>;
-        arAnchorManager!.downloadAnchor(cloudAnchorId);
-      }, this.arLocationManager!.currentLocation, 0.1);
-      setState(() {
-        readyToDownload = false;
-      });
-    } else {
-      this
-          .arSessionManager!
-          .onError("Location updates not running, can't download anchors");
-    }
-  }
 
   void showAlertDialog(BuildContext context, String title, String content,
       String buttonText, Function buttonFunction, String cancelButtonText) {
@@ -432,131 +450,6 @@ class _ARWidgetState
         return alert;
       },
     );
-  }
-}
-
-// Class for managing interaction with Firebase (in your own app, this can be put in a separate file to keep everything clean and tidy)
-typedef FirebaseListener = void Function(QuerySnapshot snapshot);
-typedef FirebaseDocumentStreamListener = void Function(
-    DocumentSnapshot snapshot);
-
-class FirebaseManager {
-  FirebaseFirestore? firestore;
-  GeoFlutterFire? geo;
-  CollectionReference? anchorCollection;
-  CollectionReference? objectCollection;
-  CollectionReference? modelCollection;
-
-  // Firebase initialization function
-  Future<bool> initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize
-      await Firebase.initializeApp();
-      geo = GeoFlutterFire();
-      firestore = FirebaseFirestore.instance;
-      anchorCollection = FirebaseFirestore.instance.collection('anchors');
-      objectCollection = FirebaseFirestore.instance.collection('objects');
-      modelCollection = FirebaseFirestore.instance.collection('models');
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  void uploadAnchor(ARAnchor anchor, {Position? currentLocation}) {
-    if (firestore == null) return;
-
-    var serializedAnchor = anchor.toJson();
-    var expirationTime = DateTime.now().millisecondsSinceEpoch / 1000 +
-        serializedAnchor["ttl"] * 24 * 60 * 60;
-    serializedAnchor["expirationTime"] = expirationTime;
-    // Add location
-    if (currentLocation != null) {
-      GeoFirePoint myLocation = geo!.point(
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude);
-      serializedAnchor["position"] = myLocation.data;
-    }
-
-    anchorCollection!
-        .add(serializedAnchor)
-        .then((value) =>
-            print("Successfully added anchor: " + serializedAnchor["name"]))
-        .catchError((error) => print("Failed to add anchor: $error"));
-  }
-
-  void uploadObject(ARNode node) {
-    if (firestore == null) return;
-
-    var serializedNode = node.toMap();
-
-    objectCollection!
-        .add(serializedNode)
-        .then((value) =>
-            print("Successfully added object: " + serializedNode["name"]))
-        .catchError((error) => print("Failed to add object: $error"));
-  }
-
-  void downloadLatestAnchor(FirebaseListener listener) {
-    anchorCollection!
-        .orderBy("expirationTime", descending: false)
-        .limitToLast(1)
-        .get()
-        .then((value) => listener(value))
-        .catchError(
-            (error) => (error) => print("Failed to download anchor: $error"));
-  }
-
-  void downloadAnchorsByLocation(FirebaseDocumentStreamListener listener,
-      Position location, double radius) {
-    GeoFirePoint center =
-        geo!.point(latitude: location.latitude, longitude: location.longitude);
-
-    Stream<List<DocumentSnapshot>> stream = geo!
-        .collection(collectionRef: anchorCollection!)
-        .within(center: center, radius: radius, field: 'position');
-
-    stream.listen((List<DocumentSnapshot> documentList) {
-      documentList.forEach((element) {
-        listener(element);
-      });
-    });
-  }
-
-  void downloadAnchorsByChannel() {}
-
-  void getObjectsFromAnchor(ARPlaneAnchor anchor, FirebaseListener listener) {
-    objectCollection!
-        .where("name", whereIn: anchor.childNodes)
-        .get()
-        .then((value) => listener(value))
-        .catchError((error) => print("Failed to download objects: $error"));
-  }
-
-  void deleteExpiredDatabaseEntries() {
-    WriteBatch batch = FirebaseFirestore.instance.batch();
-    anchorCollection!
-        .where("expirationTime",
-            isLessThan: DateTime.now().millisecondsSinceEpoch / 1000)
-        .get()
-        .then((anchorSnapshot) => anchorSnapshot.docs.forEach((anchorDoc) {
-              // Delete all objects attached to the expired anchor
-              objectCollection!
-                  .where("name", arrayContainsAny: anchorDoc.get("childNodes"))
-                  .get()
-                  .then((objectSnapshot) => objectSnapshot.docs.forEach(
-                      (objectDoc) => batch.delete(objectDoc.reference)));
-              // Delete the expired anchor
-              batch.delete(anchorDoc.reference);
-            }));
-    batch.commit();
-  }
-
-  void downloadAvailableModels(FirebaseListener listener) {
-    modelCollection!
-        .get()
-        .then((value) => listener(value))
-        .catchError((error) => print("Failed to download objects: $error"));
   }
 }
 
@@ -645,13 +538,13 @@ class _ModelSelectionWidgetState extends State<ModelSelectionWidget> {
                     child: Column(
                       children: [
                         Padding(
-                            padding: EdgeInsets.all(20),
+                            padding: EdgeInsets.all(10),
                             child: Image.network(models[index].image)),
                         Text(
                           models[index].name,
                           style: DefaultTextStyle.of(context)
                               .style
-                              .apply(fontSizeFactor: 2.0),
+                              .apply(fontSizeFactor: 1.0),
                         )
                       ],
                     ),
