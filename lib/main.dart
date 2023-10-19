@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'components/textbox.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'firebase_options.dart';
 import 'screens/ar.dart' show ARWidget;
@@ -18,66 +20,8 @@ import 'screens/home.dart' show HomePage;
 
 List<List<double>> posData = [];
 
-void main() async {
-  List<String> rawPosData = await fetchArtData();
-
-  for (var str in rawPosData) {
-    List<String> parts = str.split(',');
-    double first = double.parse(parts[0]);
-    double second = double.parse(parts[1]);
-    posData.add([first, second]);
-  }
-
+void main() {
   runApp(const MainApp());
-}
-
-Future<List<String>> fetchArtData() async {
-  bool _initialized = false;
-  bool _error = false;
-  FirebaseManager firebaseManager = FirebaseManager();
-  
-  await firebaseManager.initializeFlutterFire();
-  
-  firebaseManager.anchorCollection!.get().then(
-    (querySnapshot) {
-      querySnapshot.forEach((doc) {
-        print(doc);
-      });
-    }
-  );
-  
-  if (firebaseManager.anchorCollection != null) {
-      for (var entry in firebaseManager.anchorCollection!.get().then()) {
-        print(entry);
-      }
-  }
-  
-  
-  List<String> artList = [];
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  final ref = FirebaseDatabase.instance.ref();
-  final snapshot = await ref.child('art').get();
-  if (snapshot.exists) {
-    Object? data = snapshot.value;
-
-    if (data is List) {
-      for (var entry in data) {
-        if (entry != null) {
-          //print(entry["lat_lon"]);
-          artList.add(entry["lat_lon"]);
-        }
-      }
-    }
-  } else {
-    print('No data available.');
-  }
-
-  return artList;
 }
 
 class MainApp extends StatefulWidget {
@@ -90,11 +34,33 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   late int defaultPageIndex;
   late int selectedPageIndex;
+  FirebaseManager firebaseManager = FirebaseManager();
+  bool _initialized = false;
+  bool _error = false;
+
+  getAnchors() async {
+    firebaseManager.anchorCollection!.get().then(
+      (querySnapshot) {
+        for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
+          GeoPoint geoPoint = docSnapshot.get("position")["geopoint"];
+          posData.add([geoPoint.latitude, geoPoint.longitude]);
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
 
   @override
   void initState() {
     defaultPageIndex = 1;
     selectedPageIndex = defaultPageIndex;
+    
+    firebaseManager.initializeFlutterFire().then((value) => setState(() {
+          _initialized = value;
+          _error = !value;
+          getAnchors();
+        }));
+    
     super.initState();
   }
 
