@@ -6,13 +6,15 @@ class RoundButton extends StatefulWidget {
   final int index; // The index of this button
   final Function(int) onPressed;
   final Color color;
+  final Color pressedColor;
 
   const RoundButton(
       {Key? key,
       required this.icon,
       required this.index,
       required this.onPressed,
-      required this.color})
+      required this.color,
+      required this.pressedColor})
       : super(key: key);
 
   @override
@@ -46,6 +48,7 @@ class _RoundButtonState extends State<RoundButton> {
         child: FloatingActionButton(
           elevation: 0,
           backgroundColor: widget.color,
+          splashColor: widget.pressedColor,
           shape: const CircleBorder(
               side: BorderSide(color: AppColors.outline, width: 2)),
           onPressed: () {

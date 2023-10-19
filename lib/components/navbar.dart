@@ -36,7 +36,8 @@ class _NavbarState extends State<Navbar> {
                 color: AppColors.outline,
               ),
               onPressed: widget.handleNavSelection,
-              color: AppColors.secondaryPressed,
+              color: AppColors.secondaryDefault,
+              pressedColor: AppColors.secondaryPressed,
             )),
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 32),
@@ -48,6 +49,7 @@ class _NavbarState extends State<Navbar> {
             ),
             onPressed: widget.handleNavSelection,
             color: AppColors.secondaryDefault,
+            pressedColor: AppColors.secondaryPressed,
           ),
         ),
         Padding(
@@ -59,7 +61,8 @@ class _NavbarState extends State<Navbar> {
               color: AppColors.outline,
             ),
             onPressed: widget.handleNavSelection,
-            color: AppColors.secondaryPressed,
+            color: AppColors.secondaryDefault,
+            pressedColor: AppColors.secondaryPressed,
           ),
         ),
       ],
