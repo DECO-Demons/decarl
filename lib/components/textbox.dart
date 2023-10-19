@@ -35,6 +35,7 @@ class _TextBoxState extends State<CustomTextBox> {
         decoration: BoxDecoration(
           color: widget.color,
           shape: BoxShape.rectangle,
+          border: Border.all(color: AppColors.outline, width: 2),
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [
             BoxShadow(
@@ -46,8 +47,20 @@ class _TextBoxState extends State<CustomTextBox> {
             ),
           ],
         ),
-        child: Text(widget.body,
-            style: const TextStyle(
-                color: AppColors.outline, decoration: TextDecoration.none)));
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          widget.heading == null
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Text(widget.heading!,
+                      style: const TextStyle(
+                          color: AppColors.outline,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.bold)),
+                ),
+          Text(widget.body,
+              style: const TextStyle(
+                  color: AppColors.outline, decoration: TextDecoration.none)),
+        ]));
   }
 }

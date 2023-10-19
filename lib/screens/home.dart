@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
                 "Any content uploaded to DECARL must not be discriminatory in nature.",
             body:
                 'Discriminatory uploads include but are not limited to content that is racist, homophobic, ableist, transphobic, sexist and ageist.    ',
-            color: AppColors.secondaryDefault,
+            color: AppColors.secondaryLight,
             expandable: true,
           )),
     );
