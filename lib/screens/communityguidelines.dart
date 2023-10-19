@@ -23,7 +23,7 @@ class _CommunityGuidelinesState extends State<CommunityGuidelines> {
             index: 1),
         Expanded(
             child: SingleChildScrollView(
-                padding: EdgeInsets.only(top: 24, bottom: 96),
+                padding: const EdgeInsets.only(top: 24, bottom: 96),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -72,7 +72,7 @@ class _CommunityGuidelinesState extends State<CommunityGuidelines> {
                     ),
                     const Padding(
                         padding: EdgeInsets.only(
-                            left: 32, right: 32, top: 16, bottom: 16),
+                            left: 32, right: 32, top: 16, bottom: 32),
                         child: Text(
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w900),
