@@ -4,7 +4,8 @@ import 'package:decarl/components/textbox.dart';
 import 'package:decarl/components/appcolors.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final Function(String)? redirect;
+  const HomePage({Key? key, this.redirect}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return const Expanded(
         child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 24),
+            padding: const EdgeInsets.only(top: 24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -45,7 +46,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                  padding:
+                      const EdgeInsets.only(left: 32, right: 32, bottom: 16),
                   child: CustomTextBox(
                     heading: "User screen",
                     color: AppColors.secondary200,

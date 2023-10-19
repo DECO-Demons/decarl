@@ -5,8 +5,8 @@ class RoundButton extends StatefulWidget {
   final Icon icon;
   final int? index; // The index of this button
 
-  final Function(int)? onPress;
-  final Function()? onPressRoute;
+  final Function()? onPress;
+  final Function(int)? onPressNav;
 
   final Color color;
   final Color pressedColor;
@@ -15,8 +15,8 @@ class RoundButton extends StatefulWidget {
       {Key? key,
       required this.icon,
       this.index,
+      this.onPressNav,
       this.onPress,
-      this.onPressRoute,
       required this.color,
       required this.pressedColor})
       : super(key: key);
@@ -56,10 +56,10 @@ class _RoundButtonState extends State<RoundButton> {
           shape: const CircleBorder(
               side: BorderSide(color: AppColors.grey900, width: 2)),
           onPressed: () {
-            if (widget.onPress != null) {
-              widget.onPress!(widget.index!);
-            } else if (widget.onPressRoute != null) {
-              widget.onPressRoute!();
+            if (widget.onPressNav != null) {
+              widget.onPressNav!(widget.index!);
+            } else if (widget.onPress != null) {
+              widget.onPress!();
             }
           },
           child: widget.icon,
