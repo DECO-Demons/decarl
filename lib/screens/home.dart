@@ -38,19 +38,12 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 16),
             child: CustomTextBox(
-              heading: "This is a test textbox",
-              color: AppColors.secondaryLight,
-              expandable: false,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 16),
-            child: CustomTextBox(
+              heading: "This is a test textbox with an expandable heading",
               body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
                   'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
                   'Cras laoreet convallis varius.',
               color: AppColors.secondaryLight,
-              expandable: false,
+              expandable: true,
             ),
           ),
         ],
