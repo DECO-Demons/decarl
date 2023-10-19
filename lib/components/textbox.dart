@@ -29,7 +29,7 @@ class _TextBoxState extends State<CustomTextBox> {
     super.initState();
   }
 
-  bool isExpanded = true;
+  bool isExpanded = false;
 
   void expandBox() {
     setState(() {
@@ -60,7 +60,8 @@ class _TextBoxState extends State<CustomTextBox> {
           widget.heading == null
               ? const SizedBox.shrink()
               : Padding(
-                  padding: EdgeInsets.only(bottom: isExpanded ? 16 : 0),
+                  padding: EdgeInsets.only(
+                      bottom: !widget.expandable || isExpanded ? 16 : 0),
                   child: Row(children: [
                     Expanded(
                       child: Text(widget.heading!,
@@ -75,10 +76,10 @@ class _TextBoxState extends State<CustomTextBox> {
                             icon: Icon(isExpanded
                                 ? LucideIcons.minus
                                 : LucideIcons.plus))
-                        : const Icon(LucideIcons.plus),
+                        : const SizedBox.shrink(),
                   ]),
                 ),
-          isExpanded
+          !widget.expandable || isExpanded
               ? Text(widget.body,
                   style: const TextStyle(
                       color: AppColors.outline,
