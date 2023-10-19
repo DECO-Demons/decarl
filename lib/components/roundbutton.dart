@@ -37,7 +37,7 @@ class _RoundButtonState extends State<RoundButton> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.outline,
+              color: AppColors.grey900,
               spreadRadius: 0,
               blurRadius: 0,
 
@@ -50,7 +50,7 @@ class _RoundButtonState extends State<RoundButton> {
           backgroundColor: widget.color,
           splashColor: widget.pressedColor,
           shape: const CircleBorder(
-              side: BorderSide(color: AppColors.outline, width: 2)),
+              side: BorderSide(color: AppColors.grey900, width: 2)),
           onPressed: () {
             widget.onPressed(widget.index);
           },

@@ -3,7 +3,19 @@ import 'package:flutter/material.dart';
 
 import 'components/appcolors.dart';
 import 'components/navbar.dart';
+<<<<<<< Updated upstream
 import 'components/textbox.dart';
+=======
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+=======
+import 'components/textbox.dart';
+import 'components/topbar.dart';
+>>>>>>> Stashed changes
+=======
+import 'components/textbox.dart';
+>>>>>>> 2ada3eae81c43c89fb0690191725cb0ef677e96d
+>>>>>>> Stashed changes
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -99,9 +111,6 @@ class _MainAppState extends State<MainApp> {
         home: Stack(
       children: [
         Scaffold(
-          appBar: AppBar(
-            title: const Center(child: Text('Decarl Test')),
-          ),
           body: PageView(
             controller: _pageController,
             scrollDirection: Axis.horizontal,
