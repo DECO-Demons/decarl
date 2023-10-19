@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decarl/components/imagegrid.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
-import 'package:decarl/screens/communityguidelines.dart';
-import 'package:decarl/screens/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,9 +13,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'firebase_options.dart';
+
 import 'screens/ar.dart' show ARWidget;
 import 'screens/map.dart' show MapPage;
-import 'screens/home.dart' show HomePage;
+import 'screens/testing.dart' show HomePage;
+import 'screens/user.dart' show UserPage;
+import 'screens/settings.dart' show SettingsPage;
+import 'screens/communityguidelines.dart' show CommunityGuidelines;
 
 List<List<double>> posData = [];
 
@@ -60,7 +62,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    defaultPageIndex = 3;
+    defaultPageIndex = 1;
     selectedPageIndex = defaultPageIndex;
 
     firebaseManager
@@ -72,7 +74,7 @@ class _MainAppState extends State<MainApp> {
 
   final _pageController = PageController(
     // Index of home screen
-    initialPage: 3,
+    initialPage: 1,
   );
 
   @override
@@ -105,11 +107,8 @@ class _MainAppState extends State<MainApp> {
                 // All pages
                 children: [
                   ARWidget(),
-                  HomePage(redirect: handleNavSelection),
-                  MapPage(
-                    initialLocationData: posData,
-                    getRefreshedAnchors: getAnchors,
-                  ),
+                  //HomePage(redirect: handleNavSelection),
+
                   UserPage(
                     redirect: handleNavSelection,
                     username: "test",
@@ -121,8 +120,21 @@ class _MainAppState extends State<MainApp> {
                     followerCount: 1050,
                     followingCount: 5000,
                   ),
+                  SettingsPage(
+                      redirect: handleNavSelection,
+                      username: "test",
+                      name: "Test User",
+                      profilePicture: Image.asset(
+                        "assets/avatar.png",
+                        width: 50,
+                      )),
                   CommunityGuidelines(
                     redirect: handleNavSelection,
+                  ),
+
+                  MapPage(
+                    initialLocationData: posData,
+                    getRefreshedAnchors: getAnchors,
                   ),
                 ],
               ),

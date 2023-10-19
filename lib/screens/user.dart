@@ -78,7 +78,7 @@ class _UserPageState extends State<UserPage> {
                 ),
               ),
             ]),
-            onPress: widget.redirect!,
+            //onPress: widget.redirect!,
             index: 1),
         Expanded(
             child: SingleChildScrollView(
@@ -86,18 +86,23 @@ class _UserPageState extends State<UserPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 32, right: 32, bottom: 16),
-                      child: CustomTextBox(
-                        heading: widget.name,
-                        body: "@" + widget.username,
-                        color: AppColors.secondary200,
-                        image: widget.profilePicture,
-                        imageRounded: true,
-                        headingSize: 24,
-                        bodySize: 18,
-                        betweenPadding: 0,
+                    GestureDetector(
+                      onTap: () {
+                        widget.redirect!(2);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 32, right: 32, bottom: 16),
+                        child: CustomTextBox(
+                          heading: widget.name,
+                          body: "@" + widget.username,
+                          color: AppColors.secondary200,
+                          image: widget.profilePicture,
+                          imageRounded: true,
+                          headingSize: 24,
+                          bodySize: 18,
+                          betweenPadding: 0,
+                        ),
                       ),
                     ),
                     const Padding(
