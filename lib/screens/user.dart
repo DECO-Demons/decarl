@@ -1,3 +1,4 @@
+import 'package:decarl/components/imagegrid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:decarl/components/textbox.dart';
@@ -26,7 +27,7 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TopBar(heading: "User", onPress: widget.redirect!, index: 1),
+        TopBar(heading: widget.name, onPress: widget.redirect!, index: 1),
         Expanded(
             child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 24),
@@ -38,7 +39,7 @@ class _UserPageState extends State<UserPage> {
                           left: 32, right: 32, bottom: 16),
                       child: CustomTextBox(
                         heading: widget.name,
-                        body: widget.username,
+                        body: "@" + widget.username,
                         color: AppColors.secondary200,
                         image: widget.profilePicture,
                         imageRounded: true,
@@ -57,14 +58,9 @@ class _UserPageState extends State<UserPage> {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-                      child: CustomTextBox(
-                        heading:
-                            "This is a test textbox with an expandable heading",
-                        color: AppColors.secondary200,
-                        expandable: false,
-                      ),
-                    )
+                        padding:
+                            EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                        child: ImageGrid(color: AppColors.secondary200))
                   ],
                 ))),
       ],
