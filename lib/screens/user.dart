@@ -97,6 +97,7 @@ class _UserPageState extends State<UserPage> {
                         imageRounded: true,
                         headingSize: 24,
                         bodySize: 18,
+                        betweenPadding: 0,
                       ),
                     ),
                     const Padding(
