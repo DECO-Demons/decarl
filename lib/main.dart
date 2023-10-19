@@ -1,6 +1,7 @@
 import 'package:decarl/screens/ar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'components/navbar.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -60,6 +61,16 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  late int defaultPageIndex;
+  late int selectedPageIndex;
+
+  @override
+  void initState() {
+    defaultPageIndex = 1;
+    selectedPageIndex = defaultPageIndex;
+    super.initState();
+  }
+
   final _pageController = PageController(
     // Index of home screen
     initialPage: 1,
@@ -71,33 +82,43 @@ class _MainAppState extends State<MainApp> {
     super.dispose();
   }
 
+  void handleNavSelection(int index) {
+    setState(() {
+      selectedPageIndex = index;
+    });
+    _pageController.animateToPage(selectedPageIndex,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOutCubic);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Center(child: Text('Decarl Test')),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ARWidget(),
-                      ));
-                    },
-                    icon: Icon(Icons.camera))
-              ],
-            ),
-            body: PageView(
-              controller: _pageController,
-              scrollDirection: Axis.horizontal,
-              // All pages
-              children: [
-                ARWidget(),
-                const HomePage(),
-                MapPage(
-                  locationData: posData,
-                ),
-              ],
-            )));
+        home: Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Center(child: Text('Decarl Test')),
+          ),
+          body: PageView(
+            controller: _pageController,
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+            // All pages
+            children: [
+              ARWidget(),
+              const HomePage(),
+              MapPage(
+                locationData: posData,
+              ),
+            ],
+          ),
+        ),
+        Align(
+            alignment: Alignment.bottomCenter,
+            // Navbar
+            child: Navbar(handleNavSelection: handleNavSelection)),
+      ],
+    ));
   }
 }
