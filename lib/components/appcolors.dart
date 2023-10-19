@@ -24,22 +24,6 @@ class AppColors {
   static const Color primary800 = Color(0xFF663F20);
   static const Color primary900 = Color(0xFF191008);
 
-<<<<<<< Updated upstream
-  static const Color secondaryLight = Color(0xFFEFEEFE);
-
-=======
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-  static const Color secondaryLight = Color(0xFFEFEEFE);
-
->>>>>>> 2ada3eae81c43c89fb0690191725cb0ef677e96d
->>>>>>> Stashed changes
-  static const Color tertiaryDefault = Color(0xFFCFFAB4);
-  static const Color tertiaryPressed = Color(0xFFA6C890);
-
-  static const Color outline = Color(0xFF0E0E0E);
-=======
   static const Color secondary100 = Color(0xFFFAF9FF);
   static const Color secondary200 = Color(0xFFEFEEFE);
   static const Color secondary300 = Color(0xFFE5E3FE);
@@ -59,5 +43,4 @@ class AppColors {
   static const Color tertiary700 = Color(0xFF7C966C);
   static const Color tertiary800 = Color(0xFF536448);
   static const Color tertiary900 = Color(0xFF151912);
->>>>>>> Stashed changes
 }

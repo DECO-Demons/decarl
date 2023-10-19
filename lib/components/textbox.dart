@@ -51,25 +51,11 @@ class _TextBoxState extends State<CustomTextBox> {
           decoration: BoxDecoration(
             color: widget.color,
             shape: BoxShape.rectangle,
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
             border: Border.all(color: AppColors.grey900, width: 2),
             borderRadius: BorderRadius.circular(10),
             boxShadow: const [
               BoxShadow(
                 color: AppColors.grey900,
-=======
->>>>>>> Stashed changes
-            border: Border.all(color: AppColors.outline, width: 2),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: AppColors.outline,
-<<<<<<< Updated upstream
-=======
->>>>>>> 2ada3eae81c43c89fb0690191725cb0ef677e96d
->>>>>>> Stashed changes
                 spreadRadius: 0,
                 blurRadius: 0,
 
@@ -88,15 +74,7 @@ class _TextBoxState extends State<CustomTextBox> {
                   Expanded(
                     child: Text(widget.heading!,
                         style: const TextStyle(
-<<<<<<< Updated upstream
-                            color: AppColors.outline,
-=======
-<<<<<<< HEAD
                             color: AppColors.grey900,
-=======
-                            color: AppColors.outline,
->>>>>>> 2ada3eae81c43c89fb0690191725cb0ef677e96d
->>>>>>> Stashed changes
                             decoration: TextDecoration.none,
                             fontWeight: FontWeight.bold)),
                   ),
@@ -112,15 +90,7 @@ class _TextBoxState extends State<CustomTextBox> {
             if ((!isExpandable || isExpanded) && widget.body != null)
               Text(widget.body!,
                   style: const TextStyle(
-<<<<<<< Updated upstream
-                      color: AppColors.outline,
-=======
-<<<<<<< HEAD
                       color: AppColors.grey900,
-=======
-                      color: AppColors.outline,
->>>>>>> 2ada3eae81c43c89fb0690191725cb0ef677e96d
->>>>>>> Stashed changes
                       decoration: TextDecoration.none))
           ])),
     );
