@@ -4,14 +4,14 @@ import 'appcolors.dart';
 
 class CustomTextBox extends StatefulWidget {
   final String? heading;
-  final String body;
+  final String? body;
   final Color color;
   final bool expandable;
 
   const CustomTextBox(
       {Key? key,
       this.heading,
-      required this.body,
+      this.body,
       required this.color,
       required this.expandable})
       : super(key: key);
@@ -61,7 +61,10 @@ class _TextBoxState extends State<CustomTextBox> {
               ? const SizedBox.shrink()
               : Padding(
                   padding: EdgeInsets.only(
-                      bottom: !widget.expandable || isExpanded ? 16 : 0),
+                      bottom: (!widget.expandable || isExpanded) &&
+                              widget.body != null
+                          ? 16
+                          : 0),
                   child: Row(children: [
                     Expanded(
                       child: Text(widget.heading!,
@@ -79,8 +82,8 @@ class _TextBoxState extends State<CustomTextBox> {
                         : const SizedBox.shrink(),
                   ]),
                 ),
-          !widget.expandable || isExpanded
-              ? Text(widget.body,
+          (!widget.expandable || isExpanded) && widget.body != null
+              ? Text(widget.body!,
                   style: const TextStyle(
                       color: AppColors.outline,
                       decoration: TextDecoration.none))
