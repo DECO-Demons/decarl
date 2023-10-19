@@ -27,32 +27,40 @@ class _NavbarState extends State<Navbar> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        RoundButton(
-          index: 0,
-          icon: const Icon(
-            LucideIcons.home,
-            color: AppColors.outline,
+        Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+            child: RoundButton(
+              index: 0,
+              icon: const Icon(
+                LucideIcons.home,
+                color: AppColors.outline,
+              ),
+              onPressed: widget.handleNavSelection,
+              color: AppColors.secondaryPressed,
+            )),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 32),
+          child: RoundButton(
+            index: 1,
+            icon: const Icon(
+              LucideIcons.globe,
+              color: AppColors.outline,
+            ),
+            onPressed: widget.handleNavSelection,
+            color: AppColors.secondaryDefault,
           ),
-          onPressed: widget.handleNavSelection,
-          color: AppColors.secondaryPressed,
         ),
-        RoundButton(
-          index: 1,
-          icon: const Icon(
-            LucideIcons.globe,
-            color: AppColors.outline,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          child: RoundButton(
+            index: 2,
+            icon: const Icon(
+              LucideIcons.mapPin,
+              color: AppColors.outline,
+            ),
+            onPressed: widget.handleNavSelection,
+            color: AppColors.secondaryPressed,
           ),
-          onPressed: widget.handleNavSelection,
-          color: AppColors.secondaryDefault,
-        ),
-        RoundButton(
-          index: 2,
-          icon: const Icon(
-            LucideIcons.mapPin,
-            color: AppColors.outline,
-          ),
-          onPressed: widget.handleNavSelection,
-          color: AppColors.secondaryPressed,
         ),
       ],
     );
