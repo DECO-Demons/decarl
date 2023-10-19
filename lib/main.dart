@@ -87,7 +87,7 @@ class _MainAppState extends State<MainApp> {
       selectedPageIndex = index;
     });
     _pageController.animateToPage(selectedPageIndex,
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOutCubic);
   }
 
