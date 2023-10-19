@@ -53,7 +53,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    defaultPageIndex = 1;
+    defaultPageIndex = 3;
     selectedPageIndex = defaultPageIndex;
 
     firebaseManager
@@ -65,7 +65,7 @@ class _MainAppState extends State<MainApp> {
 
   final _pageController = PageController(
     // Index of home screen
-    initialPage: 1,
+    initialPage: 3,
   );
 
   @override
@@ -105,6 +105,12 @@ class _MainAppState extends State<MainApp> {
                   ),
                   UserPage(
                     redirect: handleNavSelection,
+                    username: "test",
+                    name: "Test User",
+                    profilePicture: Image.asset(
+                      "assets/avatar.png",
+                      width: 50,
+                    ),
                   ),
                   CommunityGuidelines(
                     redirect: handleNavSelection,

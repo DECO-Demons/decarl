@@ -6,7 +6,16 @@ import 'package:decarl/components/appcolors.dart';
 
 class UserPage extends StatefulWidget {
   final Function(int)? redirect;
-  const UserPage({Key? key, this.redirect}) : super(key: key);
+  final String username;
+  final String name;
+  final Image profilePicture;
+  const UserPage(
+      {Key? key,
+      this.redirect,
+      required this.username,
+      required this.name,
+      required this.profilePicture})
+      : super(key: key);
 
   @override
   State<UserPage> createState() => _UserPageState();
@@ -18,26 +27,24 @@ class _UserPageState extends State<UserPage> {
     return Column(
       children: [
         TopBar(heading: "User", onPress: widget.redirect!, index: 1),
-        const Expanded(
+        Expanded(
             child: SingleChildScrollView(
-                padding: EdgeInsets.only(top: 24),
+                padding: const EdgeInsets.only(top: 24),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                      padding: const EdgeInsets.only(
+                          left: 32, right: 32, bottom: 16),
                       child: CustomTextBox(
-                        heading:
-                            "This is a test textbox with an expandable heading",
-                        body:
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                            'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
-                            'Cras laoreet convallis varius.',
+                        heading: widget.name,
+                        body: widget.username,
                         color: AppColors.secondary200,
-                        expandable: true,
+                        image: widget.profilePicture,
+                        imageRounded: true,
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
                       child: CustomTextBox(
                         heading: "This is a test textbox",
@@ -49,7 +56,7 @@ class _UserPageState extends State<UserPage> {
                         expandable: false,
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
                       child: CustomTextBox(
                         heading:

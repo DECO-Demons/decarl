@@ -91,43 +91,47 @@ class _TextBoxState extends State<CustomTextBox> {
                     : widget.image,
               ),
               Expanded(
-                child: Column(children: [
-                  if (widget.heading != null)
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: (!isExpandable || isExpanded) &&
-                                  widget.body != null
-                              ? 16
-                              : 0),
-                      child: Row(children: [
-                        Expanded(
-                          child: Text(widget.heading!,
-                              textAlign: widget.center != null && widget.center!
-                                  ? TextAlign.center
-                                  : TextAlign.start,
-                              style: const TextStyle(
-                                  color: AppColors.grey900,
-                                  decoration: TextDecoration.none,
-                                  fontWeight: FontWeight.bold)),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.heading != null)
+                        Padding(
+                          padding: EdgeInsets.only(
+                              bottom: (!isExpandable || isExpanded) &&
+                                      widget.body != null
+                                  ? 16
+                                  : 0),
+                          child: Row(children: [
+                            Expanded(
+                              child: Text(widget.heading!,
+                                  textAlign:
+                                      widget.center != null && widget.center!
+                                          ? TextAlign.center
+                                          : TextAlign.start,
+                                  style: const TextStyle(
+                                      color: AppColors.grey900,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            isExpandable
+                                ? IconButton(
+                                    onPressed: expandBox,
+                                    icon: Icon(isExpanded
+                                        ? LucideIcons.minus
+                                        : LucideIcons.plus))
+                                : const SizedBox.shrink(),
+                          ]),
                         ),
-                        isExpandable
-                            ? IconButton(
-                                onPressed: expandBox,
-                                icon: Icon(isExpanded
-                                    ? LucideIcons.minus
-                                    : LucideIcons.plus))
-                            : const SizedBox.shrink(),
-                      ]),
-                    ),
-                  if ((!isExpandable || isExpanded) && widget.body != null)
-                    Text(widget.body!,
-                        textAlign: widget.center != null && widget.center!
-                            ? TextAlign.center
-                            : TextAlign.start,
-                        style: const TextStyle(
-                            color: AppColors.grey900,
-                            decoration: TextDecoration.none))
-                ]),
+                      if ((!isExpandable || isExpanded) && widget.body != null)
+                        Text(widget.body!,
+                            textAlign: widget.center != null && widget.center!
+                                ? TextAlign.center
+                                : TextAlign.start,
+                            style: const TextStyle(
+                              color: AppColors.grey900,
+                              decoration: TextDecoration.none,
+                            ))
+                    ]),
               ),
             ],
           )),
