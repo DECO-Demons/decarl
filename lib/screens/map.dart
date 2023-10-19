@@ -171,7 +171,8 @@ class _MapPageState extends State<MapPage> {
                 GoogleMap(
                   onMapCreated: _onMapCreated,
                   rotateGesturesEnabled: false,
-                  myLocationButtonEnabled: false,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
                   initialCameraPosition: CameraPosition(
                     target: _currentPos!,
                     zoom: 13,
