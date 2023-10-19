@@ -61,7 +61,7 @@ class _TopBarState extends State<TopBar> {
                     LucideIcons.arrowLeft,
                     color: AppColors.grey900,
                   ),
-                  onPressRoute: widget.onPressRoute,
+                  onPress: widget.onPressRoute,
                   color: AppColors.tertiary500,
                   pressedColor: AppColors.tertiary600),
             Text(widget.heading,
