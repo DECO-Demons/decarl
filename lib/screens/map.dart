@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
-import 'dart:io' show Platform;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -22,8 +21,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   // Styles for GMaps component
-  late String _mapStyleAndroid;
-  late String _mapStyleIos;
+  late String _mapStyle;
 
   // List of Marker components to be rendered
   Set<Marker> markerList = {};
@@ -41,12 +39,9 @@ class _MapPageState extends State<MapPage> {
   */
   @override
   void initState() {
-    // Map style for Android must load from .txt, for iOS from .json
+    // Map style from https://mapstyle.withgoogle.com/
     rootBundle.loadString('assets/map_style.txt').then((string) {
-      _mapStyleAndroid = string;
-    });
-    rootBundle.loadString('assets/map_style.json').then((string) {
-      _mapStyleIos = string;
+      _mapStyle = string;
     });
 
     super.initState();
@@ -62,9 +57,7 @@ class _MapPageState extends State<MapPage> {
   void _onMapCreated(GoogleMapController controller) {
     _mapController.complete(controller);
 
-    Platform.isAndroid // Set map style based on platform
-        ? controller.setMapStyle(_mapStyleAndroid)
-        : controller.setMapStyle(_mapStyleIos);
+    controller.setMapStyle(_mapStyle);
 
     generateMarkers(widget.locationData); // Generate markers from data
   }
