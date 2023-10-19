@@ -10,24 +10,76 @@ class UserPage extends StatefulWidget {
   final String username;
   final String name;
   final Image profilePicture;
+
+  final int followerCount;
+  final int followingCount;
+
   const UserPage(
       {Key? key,
       this.redirect,
       required this.username,
       required this.name,
-      required this.profilePicture})
+      required this.profilePicture,
+      required this.followerCount,
+      required this.followingCount})
       : super(key: key);
 
   @override
   State<UserPage> createState() => _UserPageState();
 }
 
+const List<String> images = [
+  'https://via.placeholder.com/150',
+  'https://via.placeholder.com/150',
+  'https://via.placeholder.com/150',
+  'https://via.placeholder.com/150',
+  'https://via.placeholder.com/150',
+  'https://via.placeholder.com/150',
+];
+
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TopBar(heading: widget.name, onPress: widget.redirect!, index: 1),
+        TopBar(
+            heading: Row(children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: SizedBox(
+                  width: 110,
+                  height: 62,
+                  child: CustomTextBox(
+                    color: AppColors.secondary500,
+                    heading: "Followers",
+                    body: widget.followerCount.toString(),
+                    center: true,
+                    bodySize: 18,
+                    padding: 8,
+                    betweenPadding: 0,
+                    headingWeight: 4,
+                    bodyWeight: 8,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 110,
+                height: 62,
+                child: CustomTextBox(
+                  color: AppColors.secondary500,
+                  heading: "Following",
+                  body: widget.followingCount.toString(),
+                  center: true,
+                  bodySize: 18,
+                  padding: 8,
+                  betweenPadding: 0,
+                  headingWeight: 4,
+                  bodyWeight: 8,
+                ),
+              ),
+            ]),
+            onPress: widget.redirect!,
+            index: 1),
         Expanded(
             child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 24),
@@ -50,7 +102,8 @@ class _UserPageState extends State<UserPage> {
                     const Padding(
                         padding:
                             EdgeInsets.only(left: 32, right: 32, bottom: 118),
-                        child: ImageGrid(color: AppColors.secondary200))
+                        child: ImageGrid(
+                            color: AppColors.secondary200, images: images))
                   ],
                 ))),
       ],

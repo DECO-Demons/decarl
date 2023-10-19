@@ -10,6 +10,8 @@ class CustomTextBox extends StatefulWidget {
   final int? headingWeight;
   final int? bodyWeight;
 
+  final double? betweenPadding;
+
   final double? padding;
   final Color color;
   final bool? expandable;
@@ -31,7 +33,8 @@ class CustomTextBox extends StatefulWidget {
       this.headingSize,
       this.bodySize,
       this.headingWeight,
-      this.bodyWeight})
+      this.bodyWeight,
+      this.betweenPadding = 16})
       : super(key: key);
 
   @override
@@ -101,14 +104,16 @@ class _TextBoxState extends State<CustomTextBox> {
               ),
               Expanded(
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: widget.center != true
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.center,
                     children: [
                       if (widget.heading != null)
                         Padding(
                           padding: EdgeInsets.only(
                               bottom: (!isExpandable || isExpanded) &&
                                       widget.body != null
-                                  ? 16
+                                  ? widget.betweenPadding!
                                   : 0),
                           child: Row(children: [
                             Expanded(

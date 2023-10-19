@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'appcolors.dart';
 
 class ImageGrid extends StatefulWidget {
   final Color color;
+  final List<String> images;
 
-  const ImageGrid({Key? key, required this.color}) : super(key: key);
+  const ImageGrid({Key? key, required this.color, required this.images})
+      : super(key: key);
 
   @override
   State<ImageGrid> createState() => _ImageGridState();
@@ -14,15 +15,6 @@ class ImageGrid extends StatefulWidget {
 class _ImageGridState extends State<ImageGrid> {
   late bool isExpandable;
   bool isExpanded = false;
-
-  final List<String> images = [
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/150',
-  ];
 
   /* void initState()
     Callback function for when the widget is created
@@ -67,11 +59,11 @@ class _ImageGridState extends State<ImageGrid> {
                 crossAxisSpacing: 10.0, // Spacing between columns
                 mainAxisSpacing: 10.0, // Spacing between rows
               ),
-              itemCount: images.length,
+              itemCount: widget.images.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return Image.network(images[index]);
+                return Image.network(widget.images[index]);
               },
             ),
           ],

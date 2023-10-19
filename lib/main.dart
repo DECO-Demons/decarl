@@ -112,6 +112,8 @@ class _MainAppState extends State<MainApp> {
                       "assets/avatar.png",
                       width: 50,
                     ),
+                    followerCount: 1050,
+                    followingCount: 5000,
                   ),
                   CommunityGuidelines(
                     redirect: handleNavSelection,

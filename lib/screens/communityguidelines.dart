@@ -18,7 +18,8 @@ class _CommunityGuidelinesState extends State<CommunityGuidelines> {
     return Column(
       children: [
         TopBar(
-            heading: "Community Guidelines",
+            heading: const Text("Community Guidelines",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
             onPress: widget.redirect!,
             index: 1),
         Expanded(
