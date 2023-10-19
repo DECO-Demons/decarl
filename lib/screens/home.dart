@@ -13,10 +13,10 @@ class HomePage extends StatelessWidget {
       child: const Align(
           alignment: Alignment.center,
           child: CustomTextBox(
-            heading:
-                "Any content uploaded to DECARL must not be discriminatory in nature.",
-            body:
-                'Discriminatory uploads include but are not limited to content that is racist, homophobic, ableist, transphobic, sexist and ageist.    ',
+            heading: "This is a test textbox with an expandable heading",
+            body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
+                'Cras laoreet convallis varius.',
             color: AppColors.secondaryLight,
             expandable: true,
           )),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'appcolors.dart';
 
 class CustomTextBox extends StatefulWidget {
@@ -28,6 +29,14 @@ class _TextBoxState extends State<CustomTextBox> {
     super.initState();
   }
 
+  bool isExpanded = true;
+
+  void expandBox() {
+    setState(() {
+      isExpanded = !isExpanded;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,16 +60,32 @@ class _TextBoxState extends State<CustomTextBox> {
           widget.heading == null
               ? Container()
               : Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Text(widget.heading!,
-                      style: const TextStyle(
-                          color: AppColors.outline,
-                          decoration: TextDecoration.none,
-                          fontWeight: FontWeight.bold)),
+                  padding: isExpanded
+                      ? const EdgeInsets.only(bottom: 16)
+                      : const EdgeInsets.all(0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Text(widget.heading!,
+                          style: const TextStyle(
+                              color: AppColors.outline,
+                              decoration: TextDecoration.none,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    widget.expandable
+                        ? IconButton(
+                            onPressed: expandBox,
+                            icon: Icon(isExpanded
+                                ? LucideIcons.minus
+                                : LucideIcons.plus))
+                        : const Icon(LucideIcons.plus),
+                  ]),
                 ),
-          Text(widget.body,
-              style: const TextStyle(
-                  color: AppColors.outline, decoration: TextDecoration.none)),
+          isExpanded
+              ? Text(widget.body,
+                  style: const TextStyle(
+                      color: AppColors.outline,
+                      decoration: TextDecoration.none))
+              : Container(),
         ]));
   }
 }
