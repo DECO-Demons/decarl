@@ -46,6 +46,7 @@ class _ARWidgetState
 
   bool choosingModel = false;
   bool placingModel = false;
+  bool didPlaceModel = false;
   bool modelChoiceActive = false;
 
   @override
@@ -144,7 +145,7 @@ class _ARWidgetState
                           LucideIcons.plus,
                           color: AppColors.grey900,
                         ),
-                        onPress: startPlacingAnchor,
+                        onPress: enterPlacementMode,
                         color: AppColors.tertiary500,
                         pressedColor: AppColors.tertiary700,
                       )
@@ -157,6 +158,19 @@ class _ARWidgetState
                           color: AppColors.grey900,
                         ),
                         onPress: uploadLatestAnchor,
+                        color: AppColors.primary500,
+                        pressedColor: AppColors.primary700,
+                      )
+                    ),
+                    SizedBox(width: 10),
+                    Visibility(
+                      visible: placingModel,
+                      child: RoundButton(
+                        icon: const Icon(
+                          LucideIcons.trash,
+                          color: AppColors.grey900,
+                        ),
+                        onPress: cancelModelPlacementPrematurely,
                         color: AppColors.primary500,
                         pressedColor: AppColors.primary700,
                       )
@@ -253,7 +267,18 @@ class _ARWidgetState
     });
   }
 
-  void startPlacingAnchor() {
+  void exitPlacementMode() {
+    setState(() {
+      placingModel = false;
+      didPlaceModel = false;
+    });
+    this.arSessionManager!.onInitialize(
+        showPlanes: false,
+        customPlaneTexturePath: "Images/triangle.png",
+    );
+  }
+
+  void enterPlacementMode() {
     setState(() {
         placingModel = true;
     });
@@ -265,14 +290,8 @@ class _ARWidgetState
   }
   
   Future<void> uploadLatestAnchor() async {
+    exitPlacementMode();
     this.arAnchorManager!.uploadAnchor(this.anchors.last);
-    setState(() {
-      placingModel = false;
-    });
-    this.arSessionManager!.onInitialize(
-        showPlanes: false,
-        customPlaneTexturePath: "Images/triangle.png",
-    );
   }
   
   Future<void> downloadAnchors() async {
@@ -303,6 +322,11 @@ class _ARWidgetState
     await downloadAnchors();
   }
 
+  void cancelModelPlacementPrematurely() async {
+    await refreshAnchors();
+    exitPlacementMode();
+  }
+
   void onModelSelected(AvailableModel model) {
     this.selectedModel = model;
     this.arSessionManager!.onError(model.name + " selected");
@@ -311,8 +335,7 @@ class _ARWidgetState
     });
   }
 
-  Future<void> onPlaneOrPointTapped(
-      List<ARHitTestResult> hitTestResults) async {
+  void createNewAnchorAtHit(List<ARHitTestResult> hitTestResults) async {
     var singleHitTestResult = hitTestResults.firstWhere(
         (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
     if (singleHitTestResult != null) {
@@ -341,6 +364,16 @@ class _ARWidgetState
         this.arSessionManager!.onError("Adding Anchor failed");
       }
     }
+  }
+
+  Future<void> onPlaneOrPointTapped(
+      List<ARHitTestResult> hitTestResults) async {
+    if (!didPlaceModel) {
+        createNewAnchorAtHit(hitTestResults);
+    }
+    setState(() {
+      didPlaceModel = true;
+    });
   }
 
   onPanStarted(String nodeName) {
@@ -385,9 +418,6 @@ class _ARWidgetState
       anchor.childNodes.forEach((nodeName) => firebaseManager.uploadObject(
           nodes.firstWhere((element) => element.name == nodeName)));
     }
-    setState(() {
-      placingModel = false;
-    });
     this.arSessionManager!.onError("Upload successful");
   }
 
