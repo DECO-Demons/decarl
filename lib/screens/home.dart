@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(32),
       child: const Align(
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           child: CustomTextBox(
             heading: "This is a test textbox with an expandable heading",
             body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '

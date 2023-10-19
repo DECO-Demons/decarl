@@ -58,11 +58,9 @@ class _TextBoxState extends State<CustomTextBox> {
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           widget.heading == null
-              ? Container()
+              ? const SizedBox.shrink()
               : Padding(
-                  padding: isExpanded
-                      ? const EdgeInsets.only(bottom: 16)
-                      : const EdgeInsets.all(0),
+                  padding: EdgeInsets.only(bottom: isExpanded ? 16 : 0),
                   child: Row(children: [
                     Expanded(
                       child: Text(widget.heading!,
@@ -85,7 +83,7 @@ class _TextBoxState extends State<CustomTextBox> {
                   style: const TextStyle(
                       color: AppColors.outline,
                       decoration: TextDecoration.none))
-              : Container(),
+              : const SizedBox.shrink(),
         ]));
   }
 }
