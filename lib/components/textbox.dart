@@ -6,14 +6,10 @@ class CustomTextBox extends StatefulWidget {
   final String? heading;
   final String? body;
   final Color color;
-  final bool expandable;
+  final bool? expandable;
 
   const CustomTextBox(
-      {Key? key,
-      this.heading,
-      this.body,
-      required this.color,
-      required this.expandable})
+      {Key? key, this.heading, this.body, required this.color, this.expandable})
       : super(key: key);
 
   @override
@@ -21,15 +17,21 @@ class CustomTextBox extends StatefulWidget {
 }
 
 class _TextBoxState extends State<CustomTextBox> {
+  late bool isExpandable;
+  bool isExpanded = false;
   /* void initState()
     Callback function for when the widget is created
   */
   @override
   void initState() {
     super.initState();
-  }
 
-  bool isExpanded = false;
+    if (widget.expandable == null) {
+      isExpandable = false;
+    } else {
+      isExpandable = widget.expandable!;
+    }
+  }
 
   void expandBox() {
     setState(() {
@@ -39,7 +41,9 @@ class _TextBoxState extends State<CustomTextBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: widget.color,
@@ -57,37 +61,32 @@ class _TextBoxState extends State<CustomTextBox> {
           ],
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          widget.heading == null
-              ? const SizedBox.shrink()
-              : Padding(
-                  padding: EdgeInsets.only(
-                      bottom: (!widget.expandable || isExpanded) &&
-                              widget.body != null
-                          ? 16
-                          : 0),
-                  child: Row(children: [
-                    Expanded(
-                      child: Text(widget.heading!,
-                          style: const TextStyle(
-                              color: AppColors.outline,
-                              decoration: TextDecoration.none,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                    widget.expandable
-                        ? IconButton(
-                            onPressed: expandBox,
-                            icon: Icon(isExpanded
-                                ? LucideIcons.minus
-                                : LucideIcons.plus))
-                        : const SizedBox.shrink(),
-                  ]),
+          if (widget.heading != null)
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: (!isExpandable || isExpanded) && widget.body != null
+                      ? 16
+                      : 0),
+              child: Row(children: [
+                Expanded(
+                  child: Text(widget.heading!,
+                      style: const TextStyle(
+                          color: AppColors.outline,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.bold)),
                 ),
-          (!widget.expandable || isExpanded) && widget.body != null
-              ? Text(widget.body!,
-                  style: const TextStyle(
-                      color: AppColors.outline,
-                      decoration: TextDecoration.none))
-              : const SizedBox.shrink(),
+                isExpandable
+                    ? IconButton(
+                        onPressed: expandBox,
+                        icon: Icon(
+                            isExpanded ? LucideIcons.minus : LucideIcons.plus))
+                    : const SizedBox.shrink(),
+              ]),
+            ),
+          if ((!isExpandable || isExpanded) && widget.body != null)
+            Text(widget.body!,
+                style: const TextStyle(
+                    color: AppColors.outline, decoration: TextDecoration.none))
         ]));
   }
 }
