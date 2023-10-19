@@ -109,60 +109,65 @@ class _ARWidgetState
             onARViewCreated: onARViewCreated,
             planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
           ),
-          Align(
-            alignment: FractionalOffset.topRight,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  RoundButton(
-                    icon: const Icon(
-                      LucideIcons.boxes,
-                      color: AppColors.grey900,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        modelChoiceActive = !modelChoiceActive;
-                      });
-                    },
-                    color: AppColors.tertiary500,
-                    pressedColor: AppColors.tertiary700,
-                  ),
-                  SizedBox(width: 10),
-                  Visibility(
-                    visible: !placingModel,
-                    child: RoundButton(
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.only(top: 62),
+            child: Align(
+              alignment: FractionalOffset.topCenter,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RoundButton(
                       icon: const Icon(
-                        LucideIcons.plus,
+                        LucideIcons.boxes,
                         color: AppColors.grey900,
                       ),
-                      onPressed: startPlacingAnchor,
+                      onPress: () {
+                        setState(() {
+                          modelChoiceActive = !modelChoiceActive;
+                        });
+                      },
                       color: AppColors.tertiary500,
                       pressedColor: AppColors.tertiary700,
-                    )
-                  ),
-                  Visibility(
-                    visible: placingModel,
-                    child: RoundButton(
+                    ),
+                    SizedBox(width: 10),
+                    RoundButton(
                       icon: const Icon(
-                        LucideIcons.plus,
+                        LucideIcons.refreshCw,
                         color: AppColors.grey900,
                       ),
-                      onPressed: uploadLatestAnchor,
-                      color: AppColors.primary500,
-                      pressedColor: AppColors.primary700,
-                    )
-                  ),
-                  SizedBox(width: 10),
-                  RoundButton(
-                    icon: const Icon(
-                      LucideIcons.refreshCw,
-                      color: AppColors.grey900,
+                      onPress: refreshAnchors,
+                      color: AppColors.tertiary500,
+                      pressedColor: AppColors.tertiary700,
                     ),
-                    onPressed: refreshAnchors,
-                    color: AppColors.tertiary500,
-                    pressedColor: AppColors.tertiary700,
+                    SizedBox(width: 10),
+                    Visibility(
+                      visible: !placingModel,
+                      child: RoundButton(
+                        icon: const Icon(
+                          LucideIcons.plus,
+                          color: AppColors.grey900,
+                        ),
+                        onPress: startPlacingAnchor,
+                        color: AppColors.tertiary500,
+                        pressedColor: AppColors.tertiary700,
+                      )
                     ),
-                ]),
+                    Visibility(
+                      visible: placingModel,
+                      child: RoundButton(
+                        icon: const Icon(
+                          LucideIcons.check,
+                          color: AppColors.grey900,
+                        ),
+                        onPress: uploadLatestAnchor,
+                        color: AppColors.primary500,
+                        pressedColor: AppColors.primary700,
+                      )
+                    ),
+                  ]
+              ),
+            ),
           ),
           Align(
               alignment: FractionalOffset.centerLeft,
