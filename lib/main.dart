@@ -85,8 +85,10 @@ class _MainAppState extends State<MainApp> {
   void handleNavSelection(int index) {
     setState(() {
       selectedPageIndex = index;
-      print(selectedPageIndex);
     });
+    _pageController.animateToPage(selectedPageIndex,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOutCubic);
   }
 
   @override
@@ -101,6 +103,7 @@ class _MainAppState extends State<MainApp> {
           body: PageView(
             controller: _pageController,
             scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
             // All pages
             children: [
               ARWidget(),
