@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:decarl/components/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -154,7 +155,13 @@ class _MapPageState extends State<MapPage> {
     return Container(
         //padding: const EdgeInsets.only(left: 15, right: 15),
         child: _currentPos == null
-            ? const Center(child: Text("Loading..."))
+            ? //const Center(child: Text("Loading..."))
+            const Center(
+                child: CircularProgressIndicator(
+                color: AppColors.secondary700,
+                strokeWidth: 7,
+                backgroundColor: AppColors.secondary500,
+              ))
             : GoogleMap(
                 onMapCreated: _onMapCreated,
                 rotateGesturesEnabled: false,
