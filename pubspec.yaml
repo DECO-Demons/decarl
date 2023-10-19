@@ -19,6 +19,7 @@ dependencies:
       https://github.com/SoroushBeigi/ar_flutter_plugin.git
   cloud_firestore: ^4.9.2
   geoflutterfire2: ^2.3.15 
+  lucide_icons: ^0.257.0
 
       
 
@@ -31,7 +32,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/map_style.json
     - assets/map_style.txt
     - assets/triangle.png
     - assets/Chicken_01/

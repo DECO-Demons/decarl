@@ -10,19 +10,18 @@ import 'package:ar_flutter_plugin/datatypes/node_types.dart';
 import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
-import 'package:vector_math/vector_math_64.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire2/geoflutterfire2.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:vector_math/vector_math_64.dart' as VectorMath;
+import 'package:decarl/firebase_manager.dart';
 
-class arApp extends StatefulWidget {
-  arApp({Key? key}) : super(key: key);
+class ARWidget extends StatefulWidget {
+  ARWidget({Key? key}) : super(key: key);
   @override
-  _arApp createState() => _arApp();
+  _ARWidgetState createState() =>
+      _ARWidgetState();
 }
 
-class _arApp extends State<arApp> {
+class _ARWidgetState
+    extends State<ARWidget> {
   // Firebase stuff
   bool _initialized = false;
   bool _error = false;
@@ -37,9 +36,14 @@ class _arApp extends State<arApp> {
   List<ARNode> nodes = [];
   List<ARAnchor> anchors = [];
   String lastUploadedAnchor = "";
+  AvailableModel selectedModel = AvailableModel(
+      "Duck",
+      "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Fox/glTF-Binary/Fox.glb",
+      "");
 
   bool readyToUpload = false;
   bool readyToDownload = true;
+  bool modelChoiceActive = false;
 
   @override
   void initState() {
@@ -62,9 +66,9 @@ class _arApp extends State<arApp> {
     // Show error message if initialization failed
     if (_error) {
       return Scaffold(
-          appBar: AppBar(
-            title: const Text('Cloud Anchors'),
-          ),
+          // appBar: AppBar(
+          //   title: const Text('External Model Management'),
+          // ),
           body: Container(
               child: Center(
                   child: Column(
@@ -79,9 +83,9 @@ class _arApp extends State<arApp> {
     // Show a loader until FlutterFire is initialized
     if (!_initialized) {
       return Scaffold(
-          appBar: AppBar(
-            title: const Text('Cloud Anchors'),
-          ),
+          // appBar: AppBar(
+          //   title: const Text('External Model Management'),
+          // ),
           body: Container(
               child: Center(
                   child: Column(children: [
@@ -92,8 +96,17 @@ class _arApp extends State<arApp> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Cloud Anchors'),
-        ),
+            title: const Text('External Model Management'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  setState(() {
+                    modelChoiceActive = !modelChoiceActive;
+                  });
+                },
+              ),
+            ]),
         body: Container(
             child: Stack(children: [
           ARView(
@@ -126,7 +139,14 @@ class _arApp extends State<arApp> {
                           onPressed: onDownloadButtonPressed,
                           child: Text("Download"))),
                 ]),
-          )
+          ),
+          Align(
+              alignment: FractionalOffset.centerLeft,
+              child: Visibility(
+                  visible: modelChoiceActive,
+                  child: ModelSelectionWidget(
+                      onTap: onModelSelected,
+                      firebaseManager: this.firebaseManager)))
         ])));
   }
 
@@ -141,18 +161,24 @@ class _arApp extends State<arApp> {
     this.arLocationManager = arLocationManager;
 
     this.arSessionManager!.onInitialize(
-          showFeaturePoints: false,
-          showPlanes: true,
-          customPlaneTexturePath: "Images/triangle.png",
-          showWorldOrigin: true,
-        );
+        showFeaturePoints: false,
+        showPlanes: true,
+        customPlaneTexturePath: "Images/triangle.png",
+        showWorldOrigin: true,
+        handlePans: true,
+        handleRotation: true);
     this.arObjectManager!.onInitialize();
     this.arAnchorManager!.initGoogleCloudAnchorMode();
 
     this.arSessionManager!.onPlaneOrPointTap = onPlaneOrPointTapped;
-    this.arObjectManager!.onNodeTap = onNodeTapped;
     this.arAnchorManager!.onAnchorUploaded = onAnchorUploaded;
     this.arAnchorManager!.onAnchorDownloaded = onAnchorDownloaded;
+    this.arObjectManager!.onPanStart = onPanStarted;
+    this.arObjectManager!.onPanChange = onPanChanged;
+    this.arObjectManager!.onPanEnd = onPanEnded;
+    this.arObjectManager!.onRotationStart = onRotationStarted;
+    this.arObjectManager!.onRotationChange = onRotationChanged;
+    this.arObjectManager!.onRotationEnd = onRotationEnded;
 
     this
         .arLocationManager!
@@ -206,6 +232,14 @@ class _arApp extends State<arApp> {
     });
   }
 
+  void onModelSelected(AvailableModel model) {
+    this.selectedModel = model;
+    this.arSessionManager!.onError(model.name + " selected");
+    setState(() {
+      modelChoiceActive = false;
+    });
+  }
+
   Future<void> onRemoveEverything() async {
     anchors.forEach((anchor) {
       this.arAnchorManager!.removeAnchor(anchor);
@@ -224,43 +258,70 @@ class _arApp extends State<arApp> {
     }
   }
 
-  Future<void> onNodeTapped(List<String> nodeNames) async {
-    var foregroundNode =
-        nodes.firstWhere((element) => element.name == nodeNames.first);
-    this.arSessionManager!.onError(foregroundNode.data!["onTapText"]);
-  }
-
   Future<void> onPlaneOrPointTapped(
       List<ARHitTestResult> hitTestResults) async {
     var singleHitTestResult = hitTestResults.firstWhere(
         (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
-    var newAnchor = ARPlaneAnchor(
-        transformation: singleHitTestResult.worldTransform, ttl: 1);
-    bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
-    if (didAddAnchor ?? false) {
-      this.anchors.add(newAnchor);
-      // Add note to anchor
-      var newNode = ARNode(
-          type: NodeType.webGLB,
-          uri:
-              "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-          scale: Vector3(0.2, 0.2, 0.2),
-          position: Vector3(0.0, 0.0, 0.0),
-          rotation: Vector4(1.0, 0.0, 0.0, 0.0),
-          data: {"onTapText": "Ouch, that hurt!"});
-      bool? didAddNodeToAnchor =
-          await this.arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
-      if (didAddNodeToAnchor ?? false) {
-        this.nodes.add(newNode);
-        setState(() {
-          readyToUpload = true;
-        });
+    if (singleHitTestResult != null) {
+      var newAnchor = ARPlaneAnchor(
+          transformation: singleHitTestResult.worldTransform, ttl: 1);
+      bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
+      if (didAddAnchor!) {
+        this.anchors.add(newAnchor);
+        // Add note to anchor
+        var newNode = ARNode(
+            type: NodeType.webGLB,
+            uri: this.selectedModel.uri.toString(),
+            scale: VectorMath.Vector3(0.2, 0.2, 0.2),
+            position: VectorMath.Vector3(0.0, 0.0, 0.0),
+            rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
+            data: {"onTapText": "I am a " + this.selectedModel.name});
+        bool? didAddNodeToAnchor = await this
+            .arObjectManager!
+            .addNode(newNode, planeAnchor: newAnchor);
+        if (didAddNodeToAnchor!) {
+          this.nodes.add(newNode);
+          setState(() {
+            readyToUpload = true;
+          });
+        } else {
+          this.arSessionManager!.onError("Adding Node to Anchor failed");
+        }
       } else {
-        this.arSessionManager!.onError("Adding Node to Anchor failed");
+        this.arSessionManager!.onError("Adding Anchor failed");
       }
-    } else {
-      this.arSessionManager!.onError("Adding Anchor failed");
     }
+  }
+
+  onPanStarted(String nodeName) {
+    print("Started panning node " + nodeName);
+  }
+
+  onPanChanged(String nodeName) {
+    print("Continued panning node " + nodeName);
+  }
+
+  onPanEnded(String nodeName, Matrix4 newTransform) {
+    print("Ended panning node " + nodeName);
+    final pannedNode =
+        this.nodes.firstWhere((element) => element.name == nodeName);
+    pannedNode.transform = newTransform;
+  }
+
+  onRotationStarted(String nodeName) {
+    print("Started rotating node " + nodeName);
+  }
+
+  onRotationChanged(String nodeName) {
+    print("Continued rotating node " + nodeName);
+  }
+
+  onRotationEnded(String nodeName, Matrix4 newTransform) {
+    print("Ended rotating node " + nodeName);
+    final rotatedNode =
+        this.nodes.firstWhere((element) => element.name == nodeName);
+
+    rotatedNode.transform = newTransform;
   }
 
   Future<void> onUploadButtonPressed() async {
@@ -369,118 +430,107 @@ class _arApp extends State<arApp> {
   }
 }
 
-// Class for managing interaction with Firebase (in your own app, this can be put in a separate file to keep everything clean and tidy)
-typedef FirebaseListener = void Function(QuerySnapshot snapshot);
-typedef FirebaseDocumentStreamListener = void Function(
-    DocumentSnapshot snapshot);
 
-class FirebaseManager {
-  FirebaseFirestore? firestore;
-  GeoFlutterFire? geo;
-  CollectionReference? anchorCollection;
-  CollectionReference? objectCollection;
+class AvailableModel {
+  String name;
+  String uri;
+  String image;
+  AvailableModel(this.name, this.uri, this.image);
+}
 
-  // Firebase initialization function
-  Future<bool> initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize
-      await Firebase.initializeApp();
-      geo = GeoFlutterFire();
-      firestore = FirebaseFirestore.instance;
-      anchorCollection = FirebaseFirestore.instance.collection('anchors');
-      objectCollection = FirebaseFirestore.instance.collection('objects');
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
+class ModelSelectionWidget extends StatefulWidget {
+  final Function onTap;
+  final FirebaseManager firebaseManager;
 
-  void uploadAnchor(ARAnchor anchor, {Position? currentLocation}) {
-    if (firestore == null) return;
+  ModelSelectionWidget({required this.onTap, required this.firebaseManager});
 
-    var serializedAnchor = anchor.toJson();
-    var expirationTime = DateTime.now().millisecondsSinceEpoch / 1000 +
-        serializedAnchor["ttl"] * 24 * 60 * 60;
-    serializedAnchor["expirationTime"] = expirationTime;
-    // Add location
-    if (currentLocation != null) {
-      GeoFirePoint myLocation = geo!.point(
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude);
-      serializedAnchor["position"] = myLocation.data;
-    }
+  @override
+  _ModelSelectionWidgetState createState() => _ModelSelectionWidgetState();
+}
 
-    anchorCollection!
-        .add(serializedAnchor)
-        .then((value) =>
-            print("Successfully added anchor: " + serializedAnchor["name"]))
-        .catchError((error) => print("Failed to add anchor: $error"));
-  }
+class _ModelSelectionWidgetState extends State<ModelSelectionWidget> {
+  List<AvailableModel> models = [];
 
-  void uploadObject(ARNode node) {
-    if (firestore == null) return;
+  String? selected;
 
-    var serializedNode = node.toMap();
-
-    objectCollection!
-        .add(serializedNode)
-        .then((value) =>
-            print("Successfully added object: " + serializedNode["name"]))
-        .catchError((error) => print("Failed to add object: $error"));
-  }
-
-  void downloadLatestAnchor(FirebaseListener listener) {
-    anchorCollection!
-        .orderBy("expirationTime", descending: false)
-        .limitToLast(1)
-        .get()
-        .then((value) => listener(value))
-        .catchError(
-            (error) => (error) => print("Failed to download anchor: $error"));
-  }
-
-  void downloadAnchorsByLocation(FirebaseDocumentStreamListener listener,
-      Position location, double radius) {
-    GeoFirePoint center =
-        geo!.point(latitude: location.latitude, longitude: location.longitude);
-
-    Stream<List<DocumentSnapshot>> stream = geo!
-        .collection(collectionRef: anchorCollection!)
-        .within(center: center, radius: radius, field: 'position');
-
-    stream.listen((List<DocumentSnapshot> documentList) {
-      documentList.forEach((element) {
-        listener(element);
+  @override
+  void initState() {
+    super.initState();
+    widget.firebaseManager.downloadAvailableModels((snapshot) {
+      snapshot.docs.forEach((element) {
+        setState(() {
+          print(element.get("uri"));
+          models.add(AvailableModel(
+              element.get("name"), element.get("uri"), element.get("image")));
+        });
       });
     });
   }
 
-  void downloadAnchorsByChannel() {}
-
-  void getObjectsFromAnchor(ARPlaneAnchor anchor, FirebaseListener listener) {
-    objectCollection!
-        .where("name", whereIn: anchor.childNodes)
-        .get()
-        .then((value) => listener(value))
-        .catchError((error) => print("Failed to download objects: $error"));
-  }
-
-  void deleteExpiredDatabaseEntries() {
-    WriteBatch batch = FirebaseFirestore.instance.batch();
-    anchorCollection!
-        .where("expirationTime",
-            isLessThan: DateTime.now().millisecondsSinceEpoch / 1000)
-        .get()
-        .then((anchorSnapshot) => anchorSnapshot.docs.forEach((anchorDoc) {
-              // Delete all objects attached to the expired anchor
-              objectCollection!
-                  .where("name", arrayContainsAny: anchorDoc.get("childNodes"))
-                  .get()
-                  .then((objectSnapshot) => objectSnapshot.docs.forEach(
-                      (objectDoc) => batch.delete(objectDoc.reference)));
-              // Delete the expired anchor
-              batch.delete(anchorDoc.reference);
-            }));
-    batch.commit();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.white,
+                style: BorderStyle.solid,
+                width: 4.0,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              shape: BoxShape.rectangle,
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                  color: Color(0x66000000),
+                  blurRadius: 10.0,
+                  spreadRadius: 4.0,
+                )
+              ],
+            ),
+            child: Text('Choose a Model',
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .apply(fontSizeFactor: 2.0)),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.width * 0.65,
+            child: ListView.builder(
+              itemCount: models.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    widget.onTap(models[index]);
+                  },
+                  child: Card(
+                    elevation: 4.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Image.network(models[index].image)),
+                        Text(
+                          models[index].name,
+                          style: DefaultTextStyle.of(context)
+                              .style
+                              .apply(fontSizeFactor: 2.0),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
+        ]);
   }
 }
