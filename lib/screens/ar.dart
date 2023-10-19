@@ -54,7 +54,7 @@ class _ARWidgetState
           _initialized = value;
           _error = !value;
         }));
-
+    downloadAnchors();
     super.initState();
   }
 
