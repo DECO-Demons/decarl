@@ -1,3 +1,4 @@
+import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,7 @@ import 'components/textbox.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:decarl/firebase_manager.dart';
 import 'firebase_options.dart';
 import 'screens/ar.dart' show ARWidget;
 import 'screens/map.dart' show MapPage;
@@ -30,6 +32,27 @@ void main() async {
 }
 
 Future<List<String>> fetchArtData() async {
+  bool _initialized = false;
+  bool _error = false;
+  FirebaseManager firebaseManager = FirebaseManager();
+  
+  await firebaseManager.initializeFlutterFire();
+  
+  firebaseManager.anchorCollection!.get().then(
+    (querySnapshot) {
+      querySnapshot.forEach((doc) {
+        print(doc);
+      });
+    }
+  );
+  
+  if (firebaseManager.anchorCollection != null) {
+      for (var entry in firebaseManager.anchorCollection!.get().then()) {
+        print(entry);
+      }
+  }
+  
+  
   List<String> artList = [];
   WidgetsFlutterBinding.ensureInitialized();
 
