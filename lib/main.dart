@@ -2,6 +2,7 @@ import 'package:decarl/screens/ar.dart';
 import 'package:flutter/material.dart';
 
 import 'components/navbar.dart';
+import 'components/topbar.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -91,6 +92,10 @@ class _MainAppState extends State<MainApp> {
         curve: Curves.easeInOutCubic);
   }
 
+  void handleBackButton(String prevPage) {
+    print(prevPage);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -104,7 +109,18 @@ class _MainAppState extends State<MainApp> {
             // All pages
             children: [
               ARWidget(),
-              const HomePage(),
+              Column(children: [
+                TopBar(
+                  heading: "Home",
+                  onPressRoute: handleBackButton,
+                ),
+                const Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(top: 24),
+                    child: HomePage(),
+                  ),
+                )
+              ]),
               MapPage(
                 locationData: posData,
               ),

@@ -3,16 +3,22 @@ import 'appcolors.dart';
 
 class RoundButton extends StatefulWidget {
   final Icon icon;
-  final int index; // The index of this button
-  final Function(int) onPressed;
+  final int? index; // The index of this button
+  final Function(int)? onPress;
+
+  final Function(String)? onPressRoute;
+  final String? prevPage;
+
   final Color color;
   final Color pressedColor;
 
   const RoundButton(
       {Key? key,
       required this.icon,
-      required this.index,
-      required this.onPressed,
+      this.index,
+      this.onPress,
+      this.onPressRoute,
+      this.prevPage,
       required this.color,
       required this.pressedColor})
       : super(key: key);
@@ -52,7 +58,11 @@ class _RoundButtonState extends State<RoundButton> {
           shape: const CircleBorder(
               side: BorderSide(color: AppColors.grey900, width: 2)),
           onPressed: () {
-            widget.onPressed(widget.index);
+            if (widget.onPress != null) {
+              widget.onPress!(widget.index!);
+            } else {
+              widget.onPressRoute!(widget.prevPage!);
+            }
           },
           child: widget.icon,
         ));

@@ -5,9 +5,9 @@ import 'appcolors.dart';
 
 class TopBar extends StatefulWidget {
   final String heading;
-  final String? prevPage;
+  final Function(String)? onPressRoute;
 
-  const TopBar({Key? key, required this.heading, this.prevPage})
+  const TopBar({Key? key, required this.heading, this.onPressRoute})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class _TopBarState extends State<TopBar> {
     super.initState();
   }
 
-  void backPage(int index) {
+  void backPage(String prevPage) {
     setState(() {
       //selectedPageIndex = index;
     });
@@ -34,7 +34,7 @@ class _TopBarState extends State<TopBar> {
     final safePadding = MediaQuery.of(context).padding.top;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 32),
+      margin: const EdgeInsets.only(bottom: 5),
       height: 150,
       padding: EdgeInsets.only(top: safePadding, left: 24, right: 24),
       decoration: BoxDecoration(
@@ -46,23 +46,24 @@ class _TopBarState extends State<TopBar> {
               color: AppColors.grey900,
               spreadRadius: 0,
               blurRadius: 0,
-
               offset: Offset(0, 5), // changes position of shadow
             ),
           ]),
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: widget.onPressRoute != null
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RoundButton(
-                icon: const Icon(
-                  LucideIcons.arrowLeft,
-                  color: AppColors.grey900,
-                ),
-                index: 3,
-                onPressed: backPage,
-                color: AppColors.tertiary500,
-                pressedColor: AppColors.tertiary600),
+            if (widget.onPressRoute != null)
+              RoundButton(
+                  icon: const Icon(
+                    LucideIcons.arrowLeft,
+                    color: AppColors.grey900,
+                  ),
+                  onPressRoute: widget.onPressRoute,
+                  color: AppColors.tertiary500,
+                  pressedColor: AppColors.tertiary600),
             Text(widget.heading,
                 style: const TextStyle(
                     fontSize: 24,
