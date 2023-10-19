@@ -5,6 +5,7 @@ import 'package:decarl/screens/ar.dart';
 import 'package:decarl/screens/communityguidelines.dart';
 import 'package:decarl/screens/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'components/navbar.dart';
 import 'components/appcolors.dart';
@@ -21,6 +22,11 @@ import 'screens/home.dart' show HomePage;
 List<List<double>> posData = [];
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   runApp(const MainApp());
 }
 
