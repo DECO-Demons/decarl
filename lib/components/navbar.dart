@@ -44,7 +44,7 @@ class _NavbarState extends State<Navbar> {
           child: RoundButton(
             index: 1,
             icon: const Icon(
-              LucideIcons.globe,
+              LucideIcons.home,
               color: AppColors.grey900,
             ),
             onPressNav: widget.handleNavSelection,
