@@ -3,7 +3,6 @@ import 'package:decarl/screens/user.dart';
 import 'package:flutter/material.dart';
 
 import 'components/navbar.dart';
-import 'components/topbar.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -93,38 +92,8 @@ class _MainAppState extends State<MainApp> {
         curve: Curves.easeInOutCubic);
   }
 
-  Widget? currentPage;
-  String currPage = "user";
-  String pageTitle = "User";
-
-  String? prevPage = "home";
-
-  void handleBackButton() {
-    print(currPage);
-    switch (currPage) {
-      case "home":
-        break;
-      case "user":
-        setState(() {
-          currPage = "home";
-          pageTitle = "Home";
-          prevPage = null;
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Map<String, Widget> pages = {
-      "home": const HomePage(),
-      "user": const UserPage(),
-    };
-
-    currentPage = pages[currPage];
-
     return MaterialApp(
         home: Stack(
       children: [
@@ -136,15 +105,12 @@ class _MainAppState extends State<MainApp> {
             // All pages
             children: [
               ARWidget(),
-              Column(children: [
-                TopBar(
-                  heading: pageTitle,
-                  onPressRoute: prevPage == null ? null : handleBackButton,
-                ),
-                Container(child: currentPage),
-              ]),
+              HomePage(redirect: handleNavSelection),
               MapPage(
                 locationData: posData,
+              ),
+              UserPage(
+                redirect: handleNavSelection,
               ),
             ],
           ),

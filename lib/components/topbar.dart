@@ -5,9 +5,10 @@ import 'appcolors.dart';
 
 class TopBar extends StatefulWidget {
   final String heading;
-  final Function()? onPressRoute;
+  final Function(int)? onPress;
+  final int? index;
 
-  const TopBar({Key? key, required this.heading, this.onPressRoute})
+  const TopBar({Key? key, required this.heading, this.onPress, this.index})
       : super(key: key);
 
   @override
@@ -50,18 +51,19 @@ class _TopBarState extends State<TopBar> {
             ),
           ]),
       child: Row(
-          mainAxisAlignment: widget.onPressRoute != null
+          mainAxisAlignment: widget.onPress != null
               ? MainAxisAlignment.spaceBetween
               : MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (widget.onPressRoute != null)
+            if (widget.onPress != null)
               RoundButton(
                   icon: const Icon(
                     LucideIcons.arrowLeft,
                     color: AppColors.grey900,
                   ),
-                  onPress: widget.onPressRoute,
+                  onPressNav: widget.onPress,
+                  index: widget.index,
                   color: AppColors.tertiary500,
                   pressedColor: AppColors.tertiary600),
             Text(widget.heading,
