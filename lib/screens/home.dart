@@ -37,8 +37,9 @@ class _HomePageState extends State<HomePage> {
                         expandable: true,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 32, right: 32, bottom: 16),
                       child: CustomTextBox(
                         heading: "This is a test textbox",
                         body:
@@ -47,6 +48,23 @@ class _HomePageState extends State<HomePage> {
                             'Cras laoreet convallis varius.',
                         color: AppColors.secondary200,
                         expandable: false,
+                        image: Image.network(
+                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                          width: 50,
+                        ),
+                        imageRounded: true,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 32, right: 32, bottom: 16),
+                      child: CustomTextBox(
+                        color: AppColors.secondary200,
+                        expandable: false,
+                        image: Image.network(
+                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                          width: 276,
+                        ),
                       ),
                     ),
                     Padding(
@@ -59,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                         child: const CustomTextBox(
                           heading: "User screen",
                           color: AppColors.secondary200,
-                          expandable: false,
+                          center: true,
                         ),
                       ),
                     ),

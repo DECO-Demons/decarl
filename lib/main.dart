@@ -5,6 +5,7 @@ import 'package:decarl/screens/user.dart';
 import 'package:flutter/material.dart';
 
 import 'components/navbar.dart';
+import 'components/appcolors.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -82,32 +83,33 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: ThemeData(scaffoldBackgroundColor: AppColors.tertiary100),
         home: Stack(
-      children: [
-        Scaffold(
-          body: PageView(
-            controller: _pageController,
-            scrollDirection: Axis.horizontal,
-            physics: const NeverScrollableScrollPhysics(),
-            // All pages
-            children: [
-              ARWidget(),
-              HomePage(redirect: handleNavSelection),
-              MapPage(
-                initialLocationData: posData,
-                getRefreshedAnchors: getAnchors,
+          children: [
+            Scaffold(
+              body: PageView(
+                controller: _pageController,
+                scrollDirection: Axis.horizontal,
+                physics: const NeverScrollableScrollPhysics(),
+                // All pages
+                children: [
+                  ARWidget(),
+                  HomePage(redirect: handleNavSelection),
+                  MapPage(
+                    initialLocationData: posData,
+                    getRefreshedAnchors: getAnchors,
+                  ),
+                  UserPage(
+                    redirect: handleNavSelection,
+                  ),
+                ],
               ),
-              UserPage(
-                redirect: handleNavSelection,
-              ),
-            ],
-          ),
-        ),
-        Align(
-            alignment: Alignment.bottomCenter,
-            // Navbar
-            child: Navbar(handleNavSelection: handleNavSelection)),
-      ],
-    ));
+            ),
+            Align(
+                alignment: Alignment.bottomCenter,
+                // Navbar
+                child: Navbar(handleNavSelection: handleNavSelection)),
+          ],
+        ));
   }
 }
