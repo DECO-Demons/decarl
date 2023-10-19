@@ -113,6 +113,7 @@ class _MainAppState extends State<MainApp> {
                 TopBar(
                   heading: "Home",
                   onPressRoute: handleBackButton,
+                  prevPage: "/user",
                 ),
                 const Expanded(
                   child: SingleChildScrollView(

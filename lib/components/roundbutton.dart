@@ -4,8 +4,8 @@ import 'appcolors.dart';
 class RoundButton extends StatefulWidget {
   final Icon icon;
   final int? index; // The index of this button
-  final Function(int)? onPress;
 
+  final Function(int)? onPress;
   final Function(String)? onPressRoute;
   final String? prevPage;
 
@@ -60,7 +60,7 @@ class _RoundButtonState extends State<RoundButton> {
           onPressed: () {
             if (widget.onPress != null) {
               widget.onPress!(widget.index!);
-            } else {
+            } else if (widget.onPressRoute != null) {
               widget.onPressRoute!(widget.prevPage!);
             }
           },
