@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
+import 'package:decarl/screens/user.dart';
 import 'package:flutter/material.dart';
 
-import 'components/appcolors.dart';
 import 'components/navbar.dart';
-import 'components/textbox.dart';
-import 'components/topbar.dart';
-import 'components/textbox.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -38,16 +35,18 @@ class _MainAppState extends State<MainApp> {
   bool _initialized = false;
   bool _error = false;
 
-  getAnchors() async {
+ List<List<double>> getAnchors() {
+    List<List<double>> anchorLocations = [];
     firebaseManager.anchorCollection!.get().then(
       (querySnapshot) {
         for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
           GeoPoint geoPoint = docSnapshot.get("position")["geopoint"];
-          posData.add([geoPoint.latitude, geoPoint.longitude]);
+          anchorLocations.add([geoPoint.latitude, geoPoint.longitude]);
         }
       },
       onError: (e) => print("Error completing: $e"),
     );
+    return anchorLocations;
   }
 
   @override
@@ -55,11 +54,7 @@ class _MainAppState extends State<MainApp> {
     defaultPageIndex = 1;
     selectedPageIndex = defaultPageIndex;
     
-    firebaseManager.initializeFlutterFire().then((value) => setState(() {
-          _initialized = value;
-          _error = !value;
-          getAnchors();
-        }));
+    firebaseManager.initializeFlutterFire().then((value) => { posData = getAnchors() });
     
     super.initState();
   }
@@ -97,9 +92,13 @@ class _MainAppState extends State<MainApp> {
             // All pages
             children: [
               ARWidget(),
-              const HomePage(),
+              HomePage(redirect: handleNavSelection),
               MapPage(
-                locationData: posData,
+                initialLocationData: posData,
+                getRefreshedAnchors: getAnchors,
+              ),
+              UserPage(
+                redirect: handleNavSelection,
               ),
             ],
           ),
