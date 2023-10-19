@@ -43,23 +43,13 @@ class _UserPageState extends State<UserPage> {
                         color: AppColors.secondary200,
                         image: widget.profilePicture,
                         imageRounded: true,
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-                      child: CustomTextBox(
-                        heading: "This is a test textbox",
-                        body:
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                            'Donec accumsan quam augue, eget lacinia ante ultrices ut. '
-                            'Cras laoreet convallis varius.',
-                        color: AppColors.secondary200,
-                        expandable: false,
+                        headingSize: 24,
+                        bodySize: 18,
                       ),
                     ),
                     const Padding(
                         padding:
-                            EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                            EdgeInsets.only(left: 32, right: 32, bottom: 118),
                         child: ImageGrid(color: AppColors.secondary200))
                   ],
                 ))),

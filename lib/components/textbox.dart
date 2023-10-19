@@ -5,6 +5,11 @@ import 'appcolors.dart';
 class CustomTextBox extends StatefulWidget {
   final String? heading;
   final String? body;
+  final double? headingSize;
+  final double? bodySize;
+  final int? headingWeight;
+  final int? bodyWeight;
+
   final double? padding;
   final Color color;
   final bool? expandable;
@@ -22,7 +27,11 @@ class CustomTextBox extends StatefulWidget {
       this.expandable,
       this.center,
       this.image,
-      this.imageRounded})
+      this.imageRounded,
+      this.headingSize,
+      this.bodySize,
+      this.headingWeight,
+      this.bodyWeight})
       : super(key: key);
 
   @override
@@ -108,10 +117,16 @@ class _TextBoxState extends State<CustomTextBox> {
                                       widget.center != null && widget.center!
                                           ? TextAlign.center
                                           : TextAlign.start,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: AppColors.grey900,
                                       decoration: TextDecoration.none,
-                                      fontWeight: FontWeight.bold)),
+                                      fontWeight: widget.headingWeight != null
+                                          ? FontWeight
+                                              .values[widget.headingWeight!]
+                                          : FontWeight.w800,
+                                      fontSize: widget.headingSize != null
+                                          ? widget.headingSize
+                                          : 18)),
                             ),
                             isExpandable
                                 ? IconButton(
@@ -127,9 +142,15 @@ class _TextBoxState extends State<CustomTextBox> {
                             textAlign: widget.center != null && widget.center!
                                 ? TextAlign.center
                                 : TextAlign.start,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.grey900,
                               decoration: TextDecoration.none,
+                              fontWeight: widget.bodyWeight != null
+                                  ? FontWeight.values[widget.bodyWeight!]
+                                  : FontWeight.w500,
+                              fontSize: widget.bodySize != null
+                                  ? widget.bodySize
+                                  : 14,
                             ))
                     ]),
               ),
