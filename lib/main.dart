@@ -61,6 +61,16 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  late int defaultPageIndex;
+  late int selectedPageIndex;
+
+  @override
+  void initState() {
+    defaultPageIndex = 1;
+    selectedPageIndex = defaultPageIndex;
+    super.initState();
+  }
+
   final _pageController = PageController(
     // Index of home screen
     initialPage: 1,
@@ -70,6 +80,13 @@ class _MainAppState extends State<MainApp> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void handleNavSelection(int index) {
+    setState(() {
+      selectedPageIndex = index;
+      print(selectedPageIndex);
+    });
   }
 
   @override
@@ -94,10 +111,10 @@ class _MainAppState extends State<MainApp> {
             ],
           ),
         ),
-        const Align(
+        Align(
             alignment: Alignment.bottomCenter,
             // Navbar
-            child: Navbar(selectedIndex: 1)),
+            child: Navbar(handleNavSelection: handleNavSelection)),
       ],
     ));
   }

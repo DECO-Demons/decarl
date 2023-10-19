@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:decarl/components/navbaritem.dart';
 
 class Navbar extends StatefulWidget {
-  final int selectedIndex;
-  const Navbar({Key? key, required this.selectedIndex}) : super(key: key);
+  final Function(int) handleNavSelection;
+
+  const Navbar({Key? key, required this.handleNavSelection}) : super(key: key);
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -21,23 +22,26 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         NavbarItem(
           index: 0,
-          icon: Icon(Icons.home_outlined),
+          icon: const Icon(Icons.home_outlined),
           bottomPad: 8.0,
+          handleNavSelection: widget.handleNavSelection,
         ),
         NavbarItem(
           index: 1,
-          icon: Icon(Icons.map_outlined),
+          icon: const Icon(Icons.map_outlined),
           bottomPad: 32.0,
+          handleNavSelection: widget.handleNavSelection,
         ),
         NavbarItem(
           index: 2,
-          icon: Icon(Icons.travel_explore),
+          icon: const Icon(Icons.travel_explore),
           bottomPad: 8.0,
+          handleNavSelection: widget.handleNavSelection,
         ),
       ],
     );

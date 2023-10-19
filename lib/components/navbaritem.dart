@@ -4,11 +4,14 @@ class NavbarItem extends StatefulWidget {
   final Icon icon;
   final double bottomPad;
   final int index;
+  final Function(int) handleNavSelection;
+
   const NavbarItem(
       {Key? key,
       required this.icon,
       required this.bottomPad,
-      required this.index})
+      required this.index,
+      required this.handleNavSelection})
       : super(key: key);
 
   @override
@@ -31,7 +34,7 @@ class _NavbarItemState extends State<NavbarItem> {
             EdgeInsets.only(left: 8.0, right: 8.0, bottom: widget.bottomPad),
         child: FloatingActionButton(
           onPressed: () {
-            print(widget.index);
+            widget.handleNavSelection(widget.index);
           },
           child: widget.icon,
         ));
