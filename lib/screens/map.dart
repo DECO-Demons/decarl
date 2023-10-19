@@ -98,11 +98,12 @@ class _MapPageState extends State<MapPage> {
   */
   double hueFromDistance(double distance) {
     Map<double, double> hueMap = {
-      50: BitmapDescriptor.hueRed,
-      500: BitmapDescriptor.hueOrange,
-      1000: BitmapDescriptor.hueYellow,
-      5000: BitmapDescriptor.hueGreen,
-      10000: BitmapDescriptor.hueBlue,
+      0.020: BitmapDescriptor.hueRed,
+      0.050: BitmapDescriptor.hueOrange,
+      0.075: BitmapDescriptor.hueYellow,
+      0.150: BitmapDescriptor.hueGreen,
+      0.200: BitmapDescriptor.hueBlue,
+      0.500: BitmapDescriptor.hueViolet,
     };
 
     for (var key in hueMap.keys) {
