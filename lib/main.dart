@@ -1,7 +1,9 @@
 import 'package:decarl/screens/ar.dart';
 import 'package:flutter/material.dart';
 
+import 'components/appcolors.dart';
 import 'components/navbar.dart';
+import 'components/textbox.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';

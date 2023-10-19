@@ -7,6 +7,8 @@ class AppColors {
   static const Color secondaryDefault = Color(0xFFCBC7FC);
   static const Color secondaryPressed = Color(0xFFA29FCA);
 
+  static const Color secondaryLight = Color(0xFFEFEEFE);
+
   static const Color tertiaryDefault = Color(0xFFCFFAB4);
   static const Color tertiaryPressed = Color(0xFFA6C890);
 
