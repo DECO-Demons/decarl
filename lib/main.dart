@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
+import 'package:decarl/screens/communityguidelines.dart';
 import 'package:decarl/screens/user.dart';
 import 'package:flutter/material.dart';
 
@@ -103,6 +104,9 @@ class _MainAppState extends State<MainApp> {
                     getRefreshedAnchors: getAnchors,
                   ),
                   UserPage(
+                    redirect: handleNavSelection,
+                  ),
+                  CommunityGuidelines(
                     redirect: handleNavSelection,
                   ),
                 ],

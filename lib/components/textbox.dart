@@ -82,14 +82,9 @@ class _TextBoxState extends State<CustomTextBox> {
                     ? const EdgeInsets.only(right: 16.0)
                     : EdgeInsets.zero,
                 child: widget.image != null && widget.imageRounded == true
-                    ? Container(
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: AppColors.grey999, width: 2),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Container(
                           child: widget.image,
                         ),
                       )

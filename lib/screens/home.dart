@@ -72,10 +72,10 @@ class _HomePageState extends State<HomePage> {
                           left: 32, right: 32, bottom: 16),
                       child: GestureDetector(
                         onTap: () {
-                          widget.redirect!(3);
+                          widget.redirect!(4);
                         },
                         child: const CustomTextBox(
-                          heading: "User screen",
+                          heading: "Community Guidelines",
                           color: AppColors.secondary200,
                           center: true,
                         ),
