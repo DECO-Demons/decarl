@@ -1,6 +1,7 @@
 import 'package:decarl/screens/ar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'components/navbar.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -77,27 +78,21 @@ class _MainAppState extends State<MainApp> {
         home: Scaffold(
             appBar: AppBar(
               title: const Center(child: Text('Decarl Test')),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ARWidget(),
-                      ));
-                    },
-                    icon: Icon(Icons.camera))
-              ],
             ),
-            body: PageView(
-              controller: _pageController,
-              scrollDirection: Axis.horizontal,
-              // All pages
-              children: [
-                ARWidget(),
-                const HomePage(),
-                MapPage(
-                  locationData: posData,
-                ),
-              ],
-            )));
+            body: const Navbar(
+                selectedIndex:
+                    1) /*PageView(
+        controller: _pageController,
+        scrollDirection: Axis.horizontal,
+        // All pages
+        children: [
+          ARWidget(),
+          const HomePage(),
+          MapPage(
+            locationData: posData,
+          ),
+        ],
+      ),*/
+            ));
   }
 }

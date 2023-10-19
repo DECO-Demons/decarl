@@ -156,7 +156,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.only(left: 15, right: 15),
+        //padding: const EdgeInsets.only(left: 15, right: 15),
         child: _currentPos == null
             ? const Center(child: Text("Loading..."))
             : GoogleMap(
