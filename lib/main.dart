@@ -36,7 +36,7 @@ class _MainAppState extends State<MainApp> {
   bool _initialized = false;
   bool _error = false;
 
- List<List<double>> getAnchors() {
+  List<List<double>> getAnchors() {
     List<List<double>> anchorLocations = [];
     firebaseManager.anchorCollection!.get().then(
       (querySnapshot) {
@@ -54,9 +54,11 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     defaultPageIndex = 1;
     selectedPageIndex = defaultPageIndex;
-    
-    firebaseManager.initializeFlutterFire().then((value) => { posData = getAnchors() });
-    
+
+    firebaseManager
+        .initializeFlutterFire()
+        .then((value) => {posData = getAnchors()});
+
     super.initState();
   }
 
@@ -83,6 +85,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: AppColors.tertiary100),
         home: Stack(
           children: [

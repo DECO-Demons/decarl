@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:decarl/components/appcolors.dart';
+import 'package:decarl/components/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,7 +16,11 @@ class MapPage extends StatefulWidget {
   final List<List<double>> initialLocationData; // List of parsed lat/long pairs
   final Function getRefreshedAnchors;
 
-  const MapPage({Key? key, required this.initialLocationData, required this.getRefreshedAnchors}) : super(key: key);
+  const MapPage(
+      {Key? key,
+      required this.initialLocationData,
+      required this.getRefreshedAnchors})
+      : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -153,29 +158,45 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //padding: const EdgeInsets.only(left: 15, right: 15),
-        child: _currentPos == null
-            ? //const Center(child: Text("Loading..."))
-            const Center(
-                child: CircularProgressIndicator(
-                color: AppColors.secondary700,
-                strokeWidth: 7,
-                backgroundColor: AppColors.secondary500,
-              ))
-            : GoogleMap(
-                onMapCreated: _onMapCreated,
-                rotateGesturesEnabled: false,
-                myLocationButtonEnabled: false,
-                initialCameraPosition: CameraPosition(
-                  target: _currentPos!,
-                  zoom: 13,
+      //padding: const EdgeInsets.only(left: 15, right: 15),
+      child: _currentPos == null
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: AppColors.secondary700,
+              strokeWidth: 7,
+              backgroundColor: AppColors.secondary500,
+            ))
+          : Stack(
+              children: [
+                GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  rotateGesturesEnabled: false,
+                  myLocationButtonEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                    target: _currentPos!,
+                    zoom: 13,
+                  ),
+                  gestureRecognizers: {
+                    Factory<EagerGestureRecognizer>(
+                        () => EagerGestureRecognizer()),
+                  },
+                  markers: markerList,
                 ),
-                gestureRecognizers: {
-                  Factory<EagerGestureRecognizer>(
-                      () => EagerGestureRecognizer()),
-                },
-                markers: markerList,
-              ));
+                const Center(
+                  heightFactor: 2.5,
+                  child: SizedBox(
+                      width: 200,
+                      height: 52,
+                      child: CustomTextBox(
+                        color: AppColors.tertiary500,
+                        heading: "Artwork Map",
+                        center: true,
+                        padding: 16,
+                      )),
+                ),
+              ],
+            ),
+    );
   }
 
   /* Future<void> getLocationUpdates()

@@ -5,6 +5,7 @@ import 'appcolors.dart';
 class CustomTextBox extends StatefulWidget {
   final String? heading;
   final String? body;
+  final double? padding;
   final Color color;
   final bool? expandable;
   final bool? center;
@@ -16,6 +17,7 @@ class CustomTextBox extends StatefulWidget {
       {Key? key,
       this.heading,
       this.body,
+      this.padding,
       required this.color,
       this.expandable,
       this.center,
@@ -58,7 +60,7 @@ class _TextBoxState extends State<CustomTextBox> {
       clipBehavior: Clip.none,
       alignment: Alignment.topCenter,
       child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(widget.padding ?? 24),
           decoration: BoxDecoration(
             color: widget.color,
             shape: BoxShape.rectangle,
