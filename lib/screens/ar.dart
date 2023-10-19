@@ -23,10 +23,6 @@ class ARWidget extends StatefulWidget {
       _ARWidgetState();
 }
 
-Object initialArSessionManagerOpts = {
-
-};
-
 class _ARWidgetState
     extends State<ARWidget> {
   // Firebase stuff
@@ -58,7 +54,7 @@ class _ARWidgetState
           _initialized = value;
           _error = !value;
         }));
-
+    downloadAnchors();
     super.initState();
   }
 
