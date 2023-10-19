@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
+import 'package:decarl/screens/user.dart';
 import 'package:flutter/material.dart';
 
-import 'components/appcolors.dart';
 import 'components/navbar.dart';
-import 'components/textbox.dart';
-import 'components/topbar.dart';
-import 'components/textbox.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -95,10 +92,13 @@ class _MainAppState extends State<MainApp> {
             // All pages
             children: [
               ARWidget(),
-              const HomePage(),
+              HomePage(redirect: handleNavSelection),
               MapPage(
                 initialLocationData: posData,
                 getRefreshedAnchors: getAnchors,
+              ),
+              UserPage(
+                redirect: handleNavSelection,
               ),
             ],
           ),

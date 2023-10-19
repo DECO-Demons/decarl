@@ -5,9 +5,10 @@ import 'appcolors.dart';
 
 class TopBar extends StatefulWidget {
   final String heading;
-  final int? prevPageIndex;
+  final Function(int)? onPress;
+  final int? index;
 
-  const TopBar({Key? key, required this.heading, this.prevPageIndex})
+  const TopBar({Key? key, required this.heading, this.onPress, this.index})
       : super(key: key);
 
   @override
@@ -23,7 +24,7 @@ class _TopBarState extends State<TopBar> {
     super.initState();
   }
 
-  void backPage(int index) {
+  void backPage(String prevPage) {
     setState(() {
       //selectedPageIndex = index;
     });
@@ -34,8 +35,8 @@ class _TopBarState extends State<TopBar> {
     final safePadding = MediaQuery.of(context).padding.top;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 32),
-      height: 125,
+      margin: const EdgeInsets.only(bottom: 5),
+      height: 150,
       padding: EdgeInsets.only(top: safePadding, left: 24, right: 24),
       decoration: BoxDecoration(
           color: AppColors.primary200,
@@ -46,24 +47,30 @@ class _TopBarState extends State<TopBar> {
               color: AppColors.grey900,
               spreadRadius: 0,
               blurRadius: 0,
-
               offset: Offset(0, 5), // changes position of shadow
             ),
           ]),
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: widget.onPress != null
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RoundButton(
-                icon: const Icon(
-                  LucideIcons.arrowLeft,
-                  color: AppColors.grey900,
-                ),
-                index: 3,
-                onPressed: backPage,
-                color: AppColors.tertiary500,
-                pressedColor: AppColors.tertiary600),
-            Text(widget.heading),
+            if (widget.onPress != null)
+              RoundButton(
+                  icon: const Icon(
+                    LucideIcons.arrowLeft,
+                    color: AppColors.grey900,
+                  ),
+                  onPressNav: widget.onPress,
+                  index: widget.index,
+                  color: AppColors.tertiary500,
+                  pressedColor: AppColors.tertiary600),
+            Text(widget.heading,
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'Public Sans',
+                    fontWeight: FontWeight.w900)),
           ]),
     );
   }
