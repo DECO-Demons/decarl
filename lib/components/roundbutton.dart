@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'appcolors.dart';
 
 class RoundButton extends StatefulWidget {
   final Icon icon;
-  final EdgeInsets padding;
-  final int index;
+  final int index; // The index of this button
   final Function(int) onPressed;
   final Color color;
 
   const RoundButton(
       {Key? key,
       required this.icon,
-      required this.padding,
       required this.index,
       required this.onPressed,
       required this.color})
@@ -32,13 +30,24 @@ class _RoundButtonState extends State<RoundButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: widget.padding,
+    return Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.outline,
+              spreadRadius: 0,
+              blurRadius: 0,
+
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
         child: FloatingActionButton(
           elevation: 0,
-          backgroundColor: const Color(0xffCBC7FC),
+          backgroundColor: widget.color,
           shape: const CircleBorder(
-              side: BorderSide(color: Color(0xff0E0E0E), width: 2)),
+              side: BorderSide(color: AppColors.outline, width: 2)),
           onPressed: () {
             widget.onPressed(widget.index);
           },
