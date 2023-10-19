@@ -38,16 +38,18 @@ class _MainAppState extends State<MainApp> {
   bool _initialized = false;
   bool _error = false;
 
-  getAnchors() async {
+ List<List<double>> getAnchors() {
+    List<List<double>> anchorLocations = [];
     firebaseManager.anchorCollection!.get().then(
       (querySnapshot) {
         for (DocumentSnapshot docSnapshot in querySnapshot.docs) {
           GeoPoint geoPoint = docSnapshot.get("position")["geopoint"];
-          posData.add([geoPoint.latitude, geoPoint.longitude]);
+          anchorLocations.add([geoPoint.latitude, geoPoint.longitude]);
         }
       },
       onError: (e) => print("Error completing: $e"),
     );
+    return anchorLocations;
   }
 
   @override
@@ -55,11 +57,7 @@ class _MainAppState extends State<MainApp> {
     defaultPageIndex = 1;
     selectedPageIndex = defaultPageIndex;
     
-    firebaseManager.initializeFlutterFire().then((value) => setState(() {
-          _initialized = value;
-          _error = !value;
-          getAnchors();
-        }));
+    firebaseManager.initializeFlutterFire().then((value) => { posData = getAnchors() });
     
     super.initState();
   }
@@ -99,7 +97,8 @@ class _MainAppState extends State<MainApp> {
               ARWidget(),
               const HomePage(),
               MapPage(
-                locationData: posData,
+                initialLocationData: posData,
+                getRefreshedAnchors: getAnchors,
               ),
             ],
           ),

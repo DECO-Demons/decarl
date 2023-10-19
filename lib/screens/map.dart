@@ -11,9 +11,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
-  final List<List<double>> locationData; // List of parsed lat/long pairs
+  final List<List<double>> initialLocationData; // List of parsed lat/long pairs
+  final Function getRefreshedAnchors;
 
-  const MapPage({Key? key, required this.locationData}) : super(key: key);
+  const MapPage({Key? key, required this.initialLocationData, required this.getRefreshedAnchors}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -59,7 +60,7 @@ class _MapPageState extends State<MapPage> {
 
     controller.setMapStyle(_mapStyle);
 
-    generateMarkers(widget.locationData); // Generate markers from data
+    generateMarkers(widget.initialLocationData); // Generate markers from data
   }
 
   /* double distance(LatLng point1, LatLng point2)
@@ -135,6 +136,7 @@ class _MapPageState extends State<MapPage> {
         alpha: 0.75,
       ));
     }
+    print("Generated markers");
   }
 
   /* Widget build(BuildContext context)
@@ -202,6 +204,7 @@ class _MapPageState extends State<MapPage> {
             _currentPos =
                 LatLng(currentLocation.latitude!, currentLocation.longitude!);
           });
+          generateMarkers(widget.getRefreshedAnchors());
         }
       }
     });
