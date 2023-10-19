@@ -348,7 +348,7 @@ class _ARWidgetState
         var newNode = ARNode(
             type: NodeType.webGLB,
             uri: this.selectedModel.uri.toString(),
-            scale: VectorMath.Vector3(0.2, 0.2, 0.2),
+            scale: VectorMath.Vector3(0.002, 0.002, 0.002),
             position: VectorMath.Vector3(0.0, 0.0, 0.0),
             rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
             data: {"onTapText": "I am a " + this.selectedModel.name});
