@@ -35,7 +35,7 @@ class _TopBarState extends State<TopBar> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 32),
-      height: 125,
+      height: 150,
       padding: EdgeInsets.only(top: safePadding, left: 24, right: 24),
       decoration: BoxDecoration(
           color: AppColors.primary200,
@@ -63,7 +63,11 @@ class _TopBarState extends State<TopBar> {
                 onPressed: backPage,
                 color: AppColors.tertiary500,
                 pressedColor: AppColors.tertiary600),
-            Text(widget.heading),
+            Text(widget.heading,
+                style: const TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'Public Sans',
+                    fontWeight: FontWeight.w900)),
           ]),
     );
   }
