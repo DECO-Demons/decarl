@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/* 
+  AppColors
+  A class that contains all the colors used in the app
+*/
 class AppColors {
   static const Color grey000 = Color(0xFFFFFFFF);
   static const Color grey050 = Color(0xFFFAFAFA);

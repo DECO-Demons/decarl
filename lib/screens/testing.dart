@@ -17,7 +17,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const TopBar(heading: "Home", onPress: null),
+        const TopBar(
+            heading: Text("Home",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
+            onPress: null),
         Expanded(
             child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 24, bottom: 96),
@@ -37,8 +40,9 @@ class _HomePageState extends State<HomePage> {
                         expandable: true,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 32, right: 32, bottom: 16),
                       child: CustomTextBox(
                         heading: "This is a test textbox",
                         body:
@@ -47,6 +51,23 @@ class _HomePageState extends State<HomePage> {
                             'Cras laoreet convallis varius.',
                         color: AppColors.secondary200,
                         expandable: false,
+                        image: Image.network(
+                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                          width: 50,
+                        ),
+                        imageRounded: true,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 32, right: 32, bottom: 16),
+                      child: CustomTextBox(
+                        color: AppColors.secondary200,
+                        expandable: false,
+                        image: Image.network(
+                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+                          width: 276,
+                        ),
                       ),
                     ),
                     Padding(
@@ -54,12 +75,12 @@ class _HomePageState extends State<HomePage> {
                           left: 32, right: 32, bottom: 16),
                       child: GestureDetector(
                         onTap: () {
-                          widget.redirect!(3);
+                          widget.redirect!(2);
                         },
                         child: const CustomTextBox(
-                          heading: "User screen",
+                          heading: "Community Guidelines",
                           color: AppColors.secondary200,
-                          expandable: false,
+                          center: true,
                         ),
                       ),
                     ),

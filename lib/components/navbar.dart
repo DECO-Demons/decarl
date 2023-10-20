@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'appcolors.dart';
 
+/*
+  Navbar
+  A widget that displays the navbar at the bottom of the screen
+  It is used in the main app state
+*/
 class Navbar extends StatefulWidget {
   final Function(int) handleNavSelection;
 
@@ -27,10 +32,11 @@ class _NavbarState extends State<Navbar> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        // AR page
         Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
             child: RoundButton(
-              index: 0,
+              index: 3,
               icon: const Icon(
                 LucideIcons.camera,
                 color: AppColors.grey900,
@@ -39,12 +45,13 @@ class _NavbarState extends State<Navbar> {
               color: AppColors.secondary500,
               pressedColor: AppColors.secondary600,
             )),
+        // Profile page
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 32),
           child: RoundButton(
-            index: 1,
+            index: 4,
             icon: const Icon(
-              LucideIcons.globe,
+              LucideIcons.home,
               color: AppColors.grey900,
             ),
             onPressNav: widget.handleNavSelection,
@@ -52,10 +59,11 @@ class _NavbarState extends State<Navbar> {
             pressedColor: AppColors.secondary600,
           ),
         ),
+        // Map page
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
           child: RoundButton(
-            index: 2,
+            index: 7,
             icon: const Icon(
               LucideIcons.mapPin,
               color: AppColors.grey900,

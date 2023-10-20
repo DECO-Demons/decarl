@@ -11,10 +11,28 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:decarl/components/appcolors.dart';
 import 'package:decarl/components/roundbutton.dart';
+import 'package:decarl/components/textbox.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:vector_math/vector_math_64.dart' as VectorMath;
+
+/* ar.dart
+
+   This screen handles the AR component of the application. It facilitates downloading
+   and uploading Cloud Anchors from Firestore, including selecting from preset models
+   to place in augmented reality space.
+
+   It uses the ar_flutter plugin (which wraps around the ARCore library) to initialise and
+   manage an AR session with various helper functions.
+
+   Firestore helper functions are stored in firebase_manager.dart
+   
+   BUG!
+   When navigating to this screen from another (particularly the map screen), the app sometimes crashes.
+   Appears to be related to this issue: https://github.com/SceneView/sceneform-android/issues/330
+   Seems like something that cannot be fixed without forking ar_flutter_plugin unfortunately
+*/
 
 class ARWidget extends StatefulWidget {
   ARWidget({Key? key}) : super(key: key);
@@ -22,10 +40,6 @@ class ARWidget extends StatefulWidget {
   _ARWidgetState createState() =>
       _ARWidgetState();
 }
-
-Object initialArSessionManagerOpts = {
-
-};
 
 class _ARWidgetState
     extends State<ARWidget> {
@@ -50,6 +64,7 @@ class _ARWidgetState
 
   bool choosingModel = false;
   bool placingModel = false;
+  bool didPlaceModel = false;
   bool modelChoiceActive = false;
 
   @override
@@ -58,10 +73,11 @@ class _ARWidgetState
           _initialized = value;
           _error = !value;
         }));
-
+    downloadAnchors();
     super.initState();
   }
 
+  // Disposes of the arSession when the screen is unmounted. Essential to avoid memory leakage
   @override
   void dispose() {
     super.dispose();
@@ -74,9 +90,6 @@ class _ARWidgetState
     // Show error message if initialization failed
     if (_error) {
       return Scaffold(
-          // appBar: AppBar(
-          //   title: const Text('External Model Management'),
-          // ),
           body: Container(
               child: Center(
                   child: Column(
@@ -119,20 +132,6 @@ class _ARWidgetState
                   children: [
                     RoundButton(
                       icon: const Icon(
-                        LucideIcons.boxes,
-                        color: AppColors.grey900,
-                      ),
-                      onPress: () {
-                        setState(() {
-                          modelChoiceActive = !modelChoiceActive;
-                        });
-                      },
-                      color: AppColors.tertiary500,
-                      pressedColor: AppColors.tertiary700,
-                    ),
-                    SizedBox(width: 10),
-                    RoundButton(
-                      icon: const Icon(
                         LucideIcons.refreshCw,
                         color: AppColors.grey900,
                       ),
@@ -148,7 +147,7 @@ class _ARWidgetState
                           LucideIcons.plus,
                           color: AppColors.grey900,
                         ),
-                        onPress: startPlacingAnchor,
+                        onPress: enterPlacementMode,
                         color: AppColors.tertiary500,
                         pressedColor: AppColors.tertiary700,
                       )
@@ -161,6 +160,19 @@ class _ARWidgetState
                           color: AppColors.grey900,
                         ),
                         onPress: uploadLatestAnchor,
+                        color: AppColors.primary500,
+                        pressedColor: AppColors.primary700,
+                      )
+                    ),
+                    SizedBox(width: 10),
+                    Visibility(
+                      visible: placingModel,
+                      child: RoundButton(
+                        icon: const Icon(
+                          LucideIcons.trash,
+                          color: AppColors.grey900,
+                        ),
+                        onPress: cancelModelPlacementPrematurely,
                         color: AppColors.primary500,
                         pressedColor: AppColors.primary700,
                       )
@@ -183,7 +195,7 @@ class _ARWidgetState
       ARSessionManager arSessionManager,
       ARObjectManager arObjectManager,
       ARAnchorManager arAnchorManager,
-      ARLocationManager arLocationManager) {
+      ARLocationManager arLocationManager) async {
     this.arSessionManager = arSessionManager;
     this.arObjectManager = arObjectManager;
     this.arAnchorManager = arAnchorManager;
@@ -195,6 +207,7 @@ class _ARWidgetState
     );
     this.arAnchorManager!.initGoogleCloudAnchorMode();
 
+    // Defines event-based callback functions
     this.arSessionManager!.onPlaneOrPointTap = onPlaneOrPointTapped;
     this.arAnchorManager!.onAnchorUploaded = onAnchorUploaded;
     this.arAnchorManager!.onAnchorDownloaded = onAnchorDownloaded;
@@ -255,11 +268,15 @@ class _ARWidgetState
       }
       this.arSessionManager!.onError(error.toString());
     });
+    refreshAnchors();
   }
 
-  void startPlacingAnchor() {
+  // Sets state and AR view configuration for user placement mode
+  void enterPlacementMode() {
     setState(() {
         placingModel = true;
+        didPlaceModel = false;
+        modelChoiceActive = true;
     });
     arSessionManager!.onInitialize(
         showPlanes: true,
@@ -267,11 +284,13 @@ class _ARWidgetState
         handleRotation: true,
     );
   }
-  
-  Future<void> uploadLatestAnchor() async {
-    this.arAnchorManager!.uploadAnchor(this.anchors.last);
+
+  // Resets state and AR view configuration for art viewing mode
+  void exitPlacementMode() {
     setState(() {
       placingModel = false;
+      didPlaceModel = false;
+      modelChoiceActive = false;
     });
     this.arSessionManager!.onInitialize(
         showPlanes: false,
@@ -279,8 +298,13 @@ class _ARWidgetState
     );
   }
   
+  Future<void> uploadLatestAnchor() async {
+    exitPlacementMode();
+    this.arAnchorManager!.uploadAnchor(this.anchors.last);
+  }
+  
+  // Get anchors within a radius of 100m of the current device's location
   Future<void> downloadAnchors() async {
-    // Get anchors within a radius of 100m of the current device's location
     if (this.arLocationManager!.currentLocation != null) {
       firebaseManager.downloadAnchorsByLocation((snapshot) {
         final cloudAnchorId = snapshot.get("cloudanchorid");
@@ -307,50 +331,62 @@ class _ARWidgetState
     await downloadAnchors();
   }
 
+  // Used if user wants to 'trash' their currently placed model without uploading it
+  void cancelModelPlacementPrematurely() async {
+    if (didPlaceModel) {
+      await refreshAnchors();
+    }
+    exitPlacementMode();
+  }
+
   void onModelSelected(AvailableModel model) {
     this.selectedModel = model;
-    this.arSessionManager!.onError(model.name + " selected");
     setState(() {
       modelChoiceActive = false;
     });
   }
 
+  // Handles creation of new model when screen is tapped during placement mode
   Future<void> onPlaneOrPointTapped(
       List<ARHitTestResult> hitTestResults) async {
-    var singleHitTestResult = hitTestResults.firstWhere(
-        (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
-    if (singleHitTestResult != null) {
-      var newAnchor = ARPlaneAnchor(
-          transformation: singleHitTestResult.worldTransform, ttl: 1);
-      bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
-      if (didAddAnchor!) {
-        this.anchors.add(newAnchor);
-        // Add node to anchor
-        var newNode = ARNode(
-            type: NodeType.webGLB,
-            uri: this.selectedModel.uri.toString(),
-            scale: VectorMath.Vector3(0.2, 0.2, 0.2),
-            position: VectorMath.Vector3(0.0, 0.0, 0.0),
-            rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
-            data: {"onTapText": "I am a " + this.selectedModel.name});
-        bool? didAddNodeToAnchor = await this
-            .arObjectManager!
-            .addNode(newNode, planeAnchor: newAnchor);
-        if (didAddNodeToAnchor!) {
-          this.nodes.add(newNode);
+    if (placingModel && !didPlaceModel) {
+        var singleHitTestResult = hitTestResults.firstWhere(
+            (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
+        if (singleHitTestResult != null) {
+          var newAnchor = ARPlaneAnchor(
+              transformation: singleHitTestResult.worldTransform, ttl: 1);
+          bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
+          if (didAddAnchor!) {
+            this.anchors.add(newAnchor);
+            // Add node to anchor
+            var newNode = ARNode(
+                type: NodeType.webGLB,
+                uri: this.selectedModel.uri.toString(),
+                scale: VectorMath.Vector3(0.002, 0.002, 0.002),
+                position: VectorMath.Vector3(0.0, 0.0, 0.0),
+                rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
+                data: {"onTapText": "I am a " + this.selectedModel.name});
+            bool? didAddNodeToAnchor = await this
+                .arObjectManager!
+                .addNode(newNode, planeAnchor: newAnchor);
+            if (didAddNodeToAnchor!) {
+              this.nodes.add(newNode);
+            } else {
+              this.arSessionManager!.onError("Adding Node to Anchor failed");
+            }
+          } else {
+            this.arSessionManager!.onError("Adding Anchor failed");
+          }
         } else {
-          this.arSessionManager!.onError("Adding Node to Anchor failed");
         }
-      } else {
-        this.arSessionManager!.onError("Adding Anchor failed");
-      }
     }
+    setState(() {
+      didPlaceModel = true;
+    });
   }
 
   onPanStarted(String nodeName) {
     print("Started panning node " + nodeName);
-    // If in edit mode do nothing
-    // If not in edit mode, open modal with info
   }
 
   onPanChanged(String nodeName) {
@@ -389,9 +425,6 @@ class _ARWidgetState
       anchor.childNodes.forEach((nodeName) => firebaseManager.uploadObject(
           nodes.firstWhere((element) => element.name == nodeName)));
     }
-    setState(() {
-      placingModel = false;
-    });
     this.arSessionManager!.onError("Upload successful");
   }
 
@@ -414,7 +447,6 @@ class _ARWidgetState
 
     return anchor;
   }
-
 
   void showAlertDialog(BuildContext context, String title, String content,
       String buttonText, Function buttonFunction, String cancelButtonText) {
@@ -452,6 +484,13 @@ class _ARWidgetState
     );
   }
 }
+
+/* ModelSelectionWidget
+
+   This widget allows the user to select which model they would like to place
+   as an anchor. It is enabled when a user clicks the 'plus' icon to begin
+   creating their 'art piece'
+*/
 
 class AvailableModel {
   String name;
@@ -492,67 +531,41 @@ class _ModelSelectionWidgetState extends State<ModelSelectionWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.white,
-                style: BorderStyle.solid,
-                width: 4.0,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              shape: BoxShape.rectangle,
-              boxShadow: const <BoxShadow>[
-                BoxShadow(
-                  color: Color(0x66000000),
-                  blurRadius: 10.0,
-                  spreadRadius: 4.0,
-                )
-              ],
-            ),
-            child: Text('Choose a Model',
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .apply(fontSizeFactor: 2.0)),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.width * 0.65,
-            child: ListView.builder(
-              itemCount: models.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    widget.onTap(models[index]);
-                  },
-                  child: Card(
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Image.network(models[index].image)),
-                        Text(
-                          models[index].name,
-                          style: DefaultTextStyle.of(context)
-                              .style
-                              .apply(fontSizeFactor: 1.0),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 200,
+          height: 60,
+          child: CustomTextBox(
+            color: AppColors.secondary500,
+            heading: "Choose a Model",
+            center: true,
+            padding: 16,
+            headingSize: 20,
           )
-        ]);
+        ),
+        SizedBox(height: 15),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: GridView.count(
+            crossAxisCount: 2,
+            children: List.generate(models.length, (index) {
+              return GestureDetector(
+                onTap: () {
+                  widget.onTap(models[index]);
+                },
+                child:  Center(
+                  child: Image.network(
+               models[index].image,
+                    fit: BoxFit.contain,
+                  ),
+                )
+              );
+            }),
+          ),
+        ),
+      ]
+    );
   }
 }

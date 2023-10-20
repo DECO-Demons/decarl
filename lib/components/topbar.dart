@@ -3,10 +3,16 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'roundbutton.dart';
 import 'appcolors.dart';
 
+/*
+  TopBar
+  A widget that displays the top bar at the top of the screen
+  It is used in all info pages
+*/
 class TopBar extends StatefulWidget {
-  final String heading;
+  final Widget
+      heading; // The heading of the top bar, can be a widget to allow for custom text boxes in the top bar
   final Function(int)? onPress;
-  final int? index;
+  final int? index; // The index of the page to navigate to (if exists)
 
   const TopBar({Key? key, required this.heading, this.onPress, this.index})
       : super(key: key);
@@ -22,12 +28,6 @@ class _TopBarState extends State<TopBar> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void backPage(String prevPage) {
-    setState(() {
-      //selectedPageIndex = index;
-    });
   }
 
   @override
@@ -66,11 +66,7 @@ class _TopBarState extends State<TopBar> {
                   index: widget.index,
                   color: AppColors.tertiary500,
                   pressedColor: AppColors.tertiary600),
-            Text(widget.heading,
-                style: const TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Public Sans',
-                    fontWeight: FontWeight.w900)),
+            widget.heading,
           ]),
     );
   }
