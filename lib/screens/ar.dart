@@ -191,7 +191,7 @@ class _ARWidgetState
       ARSessionManager arSessionManager,
       ARObjectManager arObjectManager,
       ARAnchorManager arAnchorManager,
-      ARLocationManager arLocationManager) {
+      ARLocationManager arLocationManager) async {
     this.arSessionManager = arSessionManager;
     this.arObjectManager = arObjectManager;
     this.arAnchorManager = arAnchorManager;
@@ -263,6 +263,7 @@ class _ARWidgetState
       }
       this.arSessionManager!.onError(error.toString());
     });
+    refreshAnchors();
   }
 
   void exitPlacementMode() {
@@ -320,11 +321,12 @@ class _ARWidgetState
 
   Future<void> refreshAnchors() async {
     await removeVisibleAnchors();
-    await downloadAnchors();
   }
 
   void cancelModelPlacementPrematurely() async {
-    await refreshAnchors();
+    if (didPlaceModel) {
+      await refreshAnchors();
+    }
     exitPlacementMode();
   }
 
@@ -377,6 +379,11 @@ class _ARWidgetState
     print("Started panning node " + nodeName);
     // If in edit mode do nothing
     // If not in edit mode, open modal with info
+    if (!placingModel) {
+        setState(() {
+            modelChoiceActive = true;
+        });
+    }
   }
 
   onPanChanged(String nodeName) {
