@@ -47,8 +47,6 @@ class _MainAppState extends State<MainApp> {
   late int defaultPageIndex;
   late int selectedPageIndex;
   FirebaseManager firebaseManager = FirebaseManager();
-  bool _initialized = false;
-  bool _error = false;
 
   List<List<double>> getAnchors() {
     List<List<double>> anchorLocations = [];
