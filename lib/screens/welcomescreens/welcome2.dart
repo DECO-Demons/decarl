@@ -38,20 +38,22 @@ class _Welcome2State extends State<Welcome2> {
               ],
             ),
           ),
-          Center(
-              child: Padding(
-            padding: const EdgeInsets.only(top: 520.0),
-            child: RoundButton(
-                icon: const Icon(
-                  LucideIcons.arrowRight,
-                  color: AppColors.grey999,
-                ),
-                color: AppColors.secondary200,
-                pressedColor: AppColors.secondary400,
-                onPress: () {
-                  widget.redirect!(2);
-                }),
-          ))
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 105.0),
+              child: RoundButton(
+                  icon: const Icon(
+                    LucideIcons.arrowRight,
+                    color: AppColors.grey999,
+                  ),
+                  color: AppColors.secondary200,
+                  pressedColor: AppColors.secondary400,
+                  onPress: () {
+                    widget.redirect!(2);
+                  }),
+            ),
+          )
         ]));
   }
 }
