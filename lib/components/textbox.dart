@@ -19,14 +19,15 @@ class CustomTextBox extends StatefulWidget {
 
   final Image? image;
   final bool? imageRounded;
+  final bool? imageOutline;
 
   const CustomTextBox(
       {Key? key,
       this.heading,
       this.body,
-      this.padding,
+      this.padding = 24,
       required this.color,
-      this.expandable,
+      this.expandable = false,
       this.center,
       this.image,
       this.imageRounded,
@@ -34,7 +35,8 @@ class CustomTextBox extends StatefulWidget {
       this.bodySize,
       this.headingWeight,
       this.bodyWeight,
-      this.betweenPadding = 16})
+      this.betweenPadding = 16,
+      this.imageOutline = false})
       : super(key: key);
 
   @override
@@ -72,7 +74,7 @@ class _TextBoxState extends State<CustomTextBox> {
       clipBehavior: Clip.none,
       alignment: Alignment.topCenter,
       child: Container(
-          padding: EdgeInsets.all(widget.padding ?? 24),
+          padding: EdgeInsets.all(widget.padding!),
           decoration: BoxDecoration(
             color: widget.color,
             shape: BoxShape.rectangle,
@@ -94,10 +96,19 @@ class _TextBoxState extends State<CustomTextBox> {
                     ? const EdgeInsets.only(right: 16.0)
                     : EdgeInsets.zero,
                 child: widget.image != null && widget.imageRounded == true
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Container(
-                          child: widget.image,
+                    ? Container(
+                        decoration: widget.imageOutline == true
+                            ? BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: AppColors.grey999, width: 2),
+                              )
+                            : const BoxDecoration(),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Container(
+                            child: widget.image,
+                          ),
                         ),
                       )
                     : widget.image,

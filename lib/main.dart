@@ -124,6 +124,8 @@ class _MainAppState extends State<MainApp> {
                       redirect: handleNavSelection,
                       username: "test",
                       name: "Test User",
+                      location: "Test Location",
+                      email: "test@email.com",
                       profilePicture: Image.asset(
                         "assets/avatar.png",
                         width: 50,

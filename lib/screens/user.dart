@@ -102,6 +102,7 @@ class _UserPageState extends State<UserPage> {
                           headingSize: 24,
                           bodySize: 18,
                           betweenPadding: 0,
+                          imageOutline: true,
                         ),
                       ),
                     ),
