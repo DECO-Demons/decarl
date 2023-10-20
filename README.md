@@ -32,11 +32,20 @@ Ensure the emulator is started before performing the run commands detailed below
 
 ### Build and Run (MacOS & unix-based)
 
-`cd` into the project directory and perform `flutter run`.
+1. `cd` into the project directory and perform `flutter doctor`
+2. Verify that the Android related components are correctly installed (ignore any missing iOS components)
+3. If installation is correct, perform `flutter run`
 
 ### Build and Run (Windows)
 
-*Lewis to complete*
+1. Open Android Studio and choose "Open"
+2. Navigate to the decarl directory and confirm open
+3. Click "File > Settings > Plugins"
+4. Download the "Flutter" plugin, confirming all prompts including restarting IDE
+5. Run the "main.dart" configuration from the top right of the toolbarA
+6. If the Dart SDK cannot be found, follow the prompts to fix until you are asked
+to specify your Dart SDK location. From here, find your Flutter installation folder
+and select the `flutter/bin/cache/dart-sdk` directory. Enable support for the decarl project
 
 ## Development Etiquette
 
