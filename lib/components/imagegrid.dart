@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'appcolors.dart';
 
+/*
+  RoundButton
+  A round button with a custom icon
+*/
 class ImageGrid extends StatefulWidget {
-  final Color color;
-  final List<String> images;
+  final Color color; // Color of the background
+  final List<String> images; // Images to populate the grid with
 
   const ImageGrid({Key? key, required this.color, required this.images})
       : super(key: key);
@@ -63,6 +67,7 @@ class _ImageGridState extends State<ImageGrid> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
+                // Return a widget for each image
                 return ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(

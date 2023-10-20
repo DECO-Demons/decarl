@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'appcolors.dart';
 
+/*
+  RoundButton
+  A custom button widget
+*/
 class RoundButton extends StatefulWidget {
   final Icon icon;
   final int? index; // The index of this button
 
-  final Function()? onPress;
-  final Function(int)? onPressNav;
+  final Function()? onPress; // Callback function for when the button is pressed
+  final Function(int)?
+      onPressNav; // Callback function for when the button is pressed and navigation is involved
 
   final Color color;
   final Color pressedColor;
@@ -56,8 +61,10 @@ class _RoundButtonState extends State<RoundButton> {
           shape: const CircleBorder(
               side: BorderSide(color: AppColors.grey900, width: 2)),
           onPressed: () {
+            // If it's a navigation button
             if (widget.onPressNav != null) {
               widget.onPressNav!(widget.index!);
+              // If it's a regular callback
             } else if (widget.onPress != null) {
               widget.onPress!();
             }

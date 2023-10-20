@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:decarl/components/textbox.dart';
 import 'package:decarl/components/appcolors.dart';
 
+/*
+  CommunityGuidelines
+  The community guidelines screen
+*/
 class CommunityGuidelines extends StatefulWidget {
   final Function(int)? redirect;
   const CommunityGuidelines({Key? key, this.redirect}) : super(key: key);

@@ -106,6 +106,9 @@ class _MainAppState extends State<MainApp> {
           children: [
             Scaffold(
               body: PageView(
+                // The PageView controls swapping between pages based on index
+                // Every widget with a "redirect" property links back to this widget
+                // Where the click events are handled and navigation is managed
                 controller: _pageController,
                 scrollDirection: Axis.horizontal,
                 physics: const NeverScrollableScrollPhysics(),
@@ -147,11 +150,13 @@ class _MainAppState extends State<MainApp> {
               ),
             ),
             if (selectedPageIndex > 2)
+              // Show navbar on all pages except welcome screens
               Align(
                   alignment: Alignment.bottomCenter,
                   // Navbar
                   child: Navbar(handleNavSelection: handleNavSelection)),
             if (selectedPageIndex < 3)
+              // Show page indicator on welcome screens only
               Padding(
                 padding: const EdgeInsets.only(top: 64.0),
                 child: Align(

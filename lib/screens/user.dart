@@ -6,6 +6,11 @@ import 'package:decarl/components/topbar.dart';
 import 'package:decarl/components/appcolors.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+/* 
+  UserPage
+  The user screen. Properties are parsed in from the mainapp,
+  where the database would read the relevant information and supply it here
+*/
 class UserPage extends StatefulWidget {
   final Function(int)? redirect;
   final String username;
@@ -29,6 +34,8 @@ class UserPage extends StatefulWidget {
   State<UserPage> createState() => _UserPageState();
 }
 
+// Replace with actual images from the user.
+// These images are dynamically assigned when loaded
 const List<String> images = [
   'assets/tempimg/1.png',
   'assets/tempimg/2.png',
@@ -96,7 +103,7 @@ class _UserPageState extends State<UserPage> {
                             left: 32, right: 32, bottom: 16),
                         child: CustomTextBox(
                           heading: widget.name,
-                          body: "@" + widget.username,
+                          body: "@${widget.username}",
                           color: AppColors.secondary200,
                           image: widget.profilePicture,
                           imageRounded: true,

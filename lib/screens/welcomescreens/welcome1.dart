@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:decarl/components/appcolors.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+/* 
+  Welcome1
+  The first welcome screen
+*/
 class Welcome1 extends StatefulWidget {
   final Function(int)? redirect;
 
