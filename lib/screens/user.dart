@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:decarl/components/textbox.dart';
 import 'package:decarl/components/topbar.dart';
 import 'package:decarl/components/appcolors.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class UserPage extends StatefulWidget {
   final Function(int)? redirect;
@@ -103,6 +104,7 @@ class _UserPageState extends State<UserPage> {
                           bodySize: 18,
                           betweenPadding: 0,
                           imageOutline: true,
+                          customIcon: const Icon(LucideIcons.settings),
                         ),
                       ),
                     ),

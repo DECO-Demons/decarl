@@ -15,6 +15,7 @@ class CustomTextBox extends StatefulWidget {
   final double? padding;
   final Color color;
   final bool? expandable;
+  final Icon? customIcon;
   final bool? center;
 
   final Image? image;
@@ -36,7 +37,8 @@ class CustomTextBox extends StatefulWidget {
       this.headingWeight,
       this.bodyWeight,
       this.betweenPadding = 16,
-      this.imageOutline = false})
+      this.imageOutline = false,
+      this.customIcon})
       : super(key: key);
 
   @override
@@ -150,7 +152,9 @@ class _TextBoxState extends State<CustomTextBox> {
                                     icon: Icon(isExpanded
                                         ? LucideIcons.minus
                                         : LucideIcons.plus))
-                                : const SizedBox.shrink(),
+                                : widget.customIcon != null
+                                    ? Icon(widget.customIcon!.icon)
+                                    : const SizedBox.shrink(),
                           ]),
                         ),
                       if ((!isExpandable || isExpanded) && widget.body != null)
