@@ -42,7 +42,7 @@ Ensure the emulator is started before performing the run commands detailed below
 2. Navigate to the decarl directory and confirm open
 3. Click "File > Settings > Plugins"
 4. Download the "Flutter" plugin, confirming all prompts including restarting IDE
-5. Run the "main.dart" configuration from the top right of the toolbarA
+5. Run the "main.dart" configuration from the top right of the toolbar
 6. If the Dart SDK cannot be found, follow the prompts to fix until you are asked
 to specify your Dart SDK location. From here, find your Flutter installation folder
 and select the `flutter/bin/cache/dart-sdk` directory. Enable support for the decarl project
@@ -57,11 +57,11 @@ with the following name format: `<FIRST-INITIAL><SECOND-INITIAL>/<CARD-ID>`
 For example, Luka Manitta working on story 11 would be `lm/11`.
 
 When work is complete, create a pull request to merge your branch's changes
-into the `dev` branch.
+into the `dev` branch and assign a reviewer.
 
 ### Naming Commits
 
-PLEASE read and follow the specification at
+Please read and follow the specifications at
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## Authors
