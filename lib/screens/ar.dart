@@ -17,6 +17,12 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:vector_math/vector_math_64.dart' as VectorMath;
 
+/* BUG!
+   When navigating to this screen from another (particularly the map screen), the app sometimes crashes.
+   Appears to be related to this issue: https://github.com/SceneView/sceneform-android/issues/330
+   Seems like something that cannot be fixed without forking ar_flutter_plugin unfortunately
+*/
+
 class ARWidget extends StatefulWidget {
   ARWidget({Key? key}) : super(key: key);
   @override
