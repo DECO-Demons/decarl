@@ -71,9 +71,6 @@ class _ARWidgetState
     // Show error message if initialization failed
     if (_error) {
       return Scaffold(
-          // appBar: AppBar(
-          //   title: const Text('External Model Management'),
-          // ),
           body: Container(
               child: Center(
                   child: Column(
@@ -281,6 +278,7 @@ class _ARWidgetState
   void enterPlacementMode() {
     setState(() {
         placingModel = true;
+        didPlaceModel = false;
     });
     arSessionManager!.onInitialize(
         showPlanes: true,
@@ -335,41 +333,38 @@ class _ARWidgetState
     });
   }
 
-  void createNewAnchorAtHit(List<ARHitTestResult> hitTestResults) async {
-    var singleHitTestResult = hitTestResults.firstWhere(
-        (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
-    if (singleHitTestResult != null) {
-      var newAnchor = ARPlaneAnchor(
-          transformation: singleHitTestResult.worldTransform, ttl: 1);
-      bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
-      if (didAddAnchor!) {
-        this.anchors.add(newAnchor);
-        // Add node to anchor
-        var newNode = ARNode(
-            type: NodeType.webGLB,
-            uri: this.selectedModel.uri.toString(),
-            scale: VectorMath.Vector3(0.002, 0.002, 0.002),
-            position: VectorMath.Vector3(0.0, 0.0, 0.0),
-            rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
-            data: {"onTapText": "I am a " + this.selectedModel.name});
-        bool? didAddNodeToAnchor = await this
-            .arObjectManager!
-            .addNode(newNode, planeAnchor: newAnchor);
-        if (didAddNodeToAnchor!) {
-          this.nodes.add(newNode);
-        } else {
-          this.arSessionManager!.onError("Adding Node to Anchor failed");
-        }
-      } else {
-        this.arSessionManager!.onError("Adding Anchor failed");
-      }
-    }
-  }
-
   Future<void> onPlaneOrPointTapped(
       List<ARHitTestResult> hitTestResults) async {
     if (!didPlaceModel) {
-        createNewAnchorAtHit(hitTestResults);
+        var singleHitTestResult = hitTestResults.firstWhere(
+            (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
+        if (singleHitTestResult != null) {
+          var newAnchor = ARPlaneAnchor(
+              transformation: singleHitTestResult.worldTransform, ttl: 1);
+          bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
+          if (didAddAnchor!) {
+            this.anchors.add(newAnchor);
+            // Add node to anchor
+            var newNode = ARNode(
+                type: NodeType.webGLB,
+                uri: this.selectedModel.uri.toString(),
+                scale: VectorMath.Vector3(0.002, 0.002, 0.002),
+                position: VectorMath.Vector3(0.0, 0.0, 0.0),
+                rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
+                data: {"onTapText": "I am a " + this.selectedModel.name});
+            bool? didAddNodeToAnchor = await this
+                .arObjectManager!
+                .addNode(newNode, planeAnchor: newAnchor);
+            if (didAddNodeToAnchor!) {
+              this.nodes.add(newNode);
+            } else {
+              this.arSessionManager!.onError("Adding Node to Anchor failed");
+            }
+          } else {
+            this.arSessionManager!.onError("Adding Anchor failed");
+          }
+        } else {
+        }
     }
     setState(() {
       didPlaceModel = true;
