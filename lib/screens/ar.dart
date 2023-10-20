@@ -17,7 +17,18 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:vector_math/vector_math_64.dart' as VectorMath;
 
-/* BUG!
+/* ar.dart
+
+   This screen handles the AR component of the application. It facilitates downloading
+   and uploading Cloud Anchors from Firestore, including selecting from preset models
+   to place in augmented reality space.
+
+   It uses the ar_flutter plugin (which wraps around the ARCore library) to initialise and
+   manage an AR session with various helper functions.
+
+   Firestore helper functions are stored in firebase_manager.dart
+   
+   BUG!
    When navigating to this screen from another (particularly the map screen), the app sometimes crashes.
    Appears to be related to this issue: https://github.com/SceneView/sceneform-android/issues/330
    Seems like something that cannot be fixed without forking ar_flutter_plugin unfortunately
@@ -66,6 +77,7 @@ class _ARWidgetState
     super.initState();
   }
 
+  // Disposes of the arSession when the screen is unmounted. Essential to avoid memory leakage
   @override
   void dispose() {
     super.dispose();
@@ -118,20 +130,6 @@ class _ARWidgetState
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // RoundButton(
-                    //   icon: const Icon(
-                    //     LucideIcons.boxes,
-                    //     color: AppColors.grey900,
-                    //   ),
-                    //   onPress: () {
-                    //     setState(() {
-                    //       modelChoiceActive = !modelChoiceActive;
-                    //     });
-                    //   },
-                    //   color: AppColors.tertiary500,
-                    //   pressedColor: AppColors.tertiary700,
-                    // ),
-                    SizedBox(width: 10),
                     RoundButton(
                       icon: const Icon(
                         LucideIcons.refreshCw,
@@ -209,6 +207,7 @@ class _ARWidgetState
     );
     this.arAnchorManager!.initGoogleCloudAnchorMode();
 
+    // Defines event-based callback functions
     this.arSessionManager!.onPlaneOrPointTap = onPlaneOrPointTapped;
     this.arAnchorManager!.onAnchorUploaded = onAnchorUploaded;
     this.arAnchorManager!.onAnchorDownloaded = onAnchorDownloaded;
@@ -272,18 +271,7 @@ class _ARWidgetState
     refreshAnchors();
   }
 
-  void exitPlacementMode() {
-    setState(() {
-      placingModel = false;
-      didPlaceModel = false;
-      modelChoiceActive = false;
-    });
-    this.arSessionManager!.onInitialize(
-        showPlanes: false,
-        customPlaneTexturePath: "Images/triangle.png",
-    );
-  }
-
+  // Sets state and AR view configuration for user placement mode
   void enterPlacementMode() {
     setState(() {
         placingModel = true;
@@ -296,14 +284,27 @@ class _ARWidgetState
         handleRotation: true,
     );
   }
+
+  // Resets state and AR view configuration for art viewing mode
+  void exitPlacementMode() {
+    setState(() {
+      placingModel = false;
+      didPlaceModel = false;
+      modelChoiceActive = false;
+    });
+    this.arSessionManager!.onInitialize(
+        showPlanes: false,
+        customPlaneTexturePath: "Images/triangle.png",
+    );
+  }
   
   Future<void> uploadLatestAnchor() async {
     exitPlacementMode();
     this.arAnchorManager!.uploadAnchor(this.anchors.last);
   }
   
+  // Get anchors within a radius of 100m of the current device's location
   Future<void> downloadAnchors() async {
-    // Get anchors within a radius of 100m of the current device's location
     if (this.arLocationManager!.currentLocation != null) {
       firebaseManager.downloadAnchorsByLocation((snapshot) {
         final cloudAnchorId = snapshot.get("cloudanchorid");
@@ -329,6 +330,7 @@ class _ARWidgetState
     await removeVisibleAnchors();
   }
 
+  // Used if user wants to 'trash' their currently placed model without uploading it
   void cancelModelPlacementPrematurely() async {
     if (didPlaceModel) {
       await refreshAnchors();
@@ -343,9 +345,10 @@ class _ARWidgetState
     });
   }
 
+  // Handles creation of new model when screen is tapped during placement mode
   Future<void> onPlaneOrPointTapped(
       List<ARHitTestResult> hitTestResults) async {
-    if (!didPlaceModel) {
+    if (placingModel && !didPlaceModel) {
         var singleHitTestResult = hitTestResults.firstWhere(
             (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
         if (singleHitTestResult != null) {
@@ -383,13 +386,6 @@ class _ARWidgetState
 
   onPanStarted(String nodeName) {
     print("Started panning node " + nodeName);
-    // If in edit mode do nothing
-    // If not in edit mode, open modal with info
-    if (!placingModel) {
-        setState(() {
-            modelChoiceActive = true;
-        });
-    }
   }
 
   onPanChanged(String nodeName) {
@@ -451,7 +447,6 @@ class _ARWidgetState
     return anchor;
   }
 
-
   void showAlertDialog(BuildContext context, String title, String content,
       String buttonText, Function buttonFunction, String cancelButtonText) {
     // set up the buttons
@@ -488,6 +483,13 @@ class _ARWidgetState
     );
   }
 }
+
+/* ModelSelectionWidget
+
+   This widget allows the user to select which model they would like to place
+   as an anchor. It is enabled when a user clicks the 'plus' icon to begin
+   creating their 'art piece'
+*/
 
 class AvailableModel {
   String name;
