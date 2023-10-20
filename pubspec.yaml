@@ -20,6 +20,7 @@ dependencies:
   cloud_firestore: ^4.9.2
   geoflutterfire2: ^2.3.15 
   lucide_icons: ^0.257.0
+  smooth_page_indicator: ^1.1.0
 
       
 
@@ -43,3 +44,5 @@ flutter:
     - assets/tempimg/4.png
     - assets/tempimg/5.png
     - assets/tempimg/6.png
+    - assets/welcome/splash2.png
+    - assets/welcome/splash3.png
