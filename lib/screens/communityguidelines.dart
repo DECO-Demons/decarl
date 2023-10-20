@@ -21,7 +21,7 @@ class _CommunityGuidelinesState extends State<CommunityGuidelines> {
             heading: const Text("Community Guidelines",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
             onPress: widget.redirect!,
-            index: 1),
+            index: 2),
         Expanded(
             child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 24, bottom: 96),
