@@ -112,19 +112,19 @@ class _ARWidgetState
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    RoundButton(
-                      icon: const Icon(
-                        LucideIcons.boxes,
-                        color: AppColors.grey900,
-                      ),
-                      onPress: () {
-                        setState(() {
-                          modelChoiceActive = !modelChoiceActive;
-                        });
-                      },
-                      color: AppColors.tertiary500,
-                      pressedColor: AppColors.tertiary700,
-                    ),
+                    // RoundButton(
+                    //   icon: const Icon(
+                    //     LucideIcons.boxes,
+                    //     color: AppColors.grey900,
+                    //   ),
+                    //   onPress: () {
+                    //     setState(() {
+                    //       modelChoiceActive = !modelChoiceActive;
+                    //     });
+                    //   },
+                    //   color: AppColors.tertiary500,
+                    //   pressedColor: AppColors.tertiary700,
+                    // ),
                     SizedBox(width: 10),
                     RoundButton(
                       icon: const Icon(
@@ -269,6 +269,7 @@ class _ARWidgetState
     setState(() {
       placingModel = false;
       didPlaceModel = false;
+      modelChoiceActive = false;
     });
     this.arSessionManager!.onInitialize(
         showPlanes: false,
@@ -280,6 +281,7 @@ class _ARWidgetState
     setState(() {
         placingModel = true;
         didPlaceModel = false;
+        modelChoiceActive = true;
     });
     arSessionManager!.onInitialize(
         showPlanes: true,
