@@ -33,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Column(
       children: [
         TopBar(
-            heading: const Text("Home",
+            heading: const Text("Settings",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
             onPress: widget.redirect,
             index: 1),
