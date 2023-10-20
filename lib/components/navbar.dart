@@ -55,7 +55,7 @@ class _NavbarState extends State<Navbar> {
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
           child: RoundButton(
-            index: 5,
+            index: 7,
             icon: const Icon(
               LucideIcons.mapPin,
               color: AppColors.grey900,

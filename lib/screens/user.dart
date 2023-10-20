@@ -89,7 +89,7 @@ class _UserPageState extends State<UserPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        widget.redirect!(2);
+                        widget.redirect!(5);
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(

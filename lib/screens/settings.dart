@@ -36,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
             heading: const Text("Settings",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
             onPress: widget.redirect,
-            index: 1),
+            index: 4),
         Expanded(
             child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 24),
@@ -78,7 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               left: 32, right: 32, bottom: 16),
                           child: GestureDetector(
                             onTap: () {
-                              widget.redirect!(3);
+                              widget.redirect!(6);
                             },
                             child: const CustomTextBox(
                               heading: "Community Guidelines",
