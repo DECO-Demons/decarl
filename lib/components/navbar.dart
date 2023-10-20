@@ -30,7 +30,7 @@ class _NavbarState extends State<Navbar> {
         Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
             child: RoundButton(
-              index: 0,
+              index: 3,
               icon: const Icon(
                 LucideIcons.camera,
                 color: AppColors.grey900,
@@ -42,7 +42,7 @@ class _NavbarState extends State<Navbar> {
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 32),
           child: RoundButton(
-            index: 1,
+            index: 4,
             icon: const Icon(
               LucideIcons.home,
               color: AppColors.grey900,
@@ -55,7 +55,7 @@ class _NavbarState extends State<Navbar> {
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
           child: RoundButton(
-            index: 4,
+            index: 5,
             icon: const Icon(
               LucideIcons.mapPin,
               color: AppColors.grey900,

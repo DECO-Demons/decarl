@@ -22,9 +22,9 @@ class _Welcome1State extends State<Welcome1> {
       backgroundColor: AppColors.primary100,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.only(left: 32.0, right: 32.0, top: 108.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
@@ -79,12 +79,41 @@ class _Welcome1State extends State<Welcome1> {
                   ),
                 ),
               ),
-              const CustomTextBox(
-                color: AppColors.primary500,
-                heading: "Get Started",
-                customIcon: Icon(LucideIcons.arrowRight),
-                center: true,
-                padding: 14,
+              GestureDetector(
+                onTap: () {
+                  widget.redirect!(1);
+                },
+                child: const CustomTextBox(
+                  color: AppColors.primary500,
+                  heading: "Get Started",
+                  customIcon: Icon(LucideIcons.arrowRight),
+                  center: true,
+                  padding: 14,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 48.0, bottom: 16.0),
+                child: RichText(
+                  text: const TextSpan(children: [
+                    TextSpan(
+                      text: "Already have an account? ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey999,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "Sign in",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary600,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ]),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),

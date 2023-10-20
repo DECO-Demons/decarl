@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
-import 'package:decarl/screens/welcomescreens/welcome1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -16,7 +15,9 @@ import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'firebase_options.dart';
 */
-
+import 'screens/welcomescreens/welcome1.dart' show Welcome1;
+import 'screens/welcomescreens/welcome2.dart' show Welcome2;
+import 'screens/welcomescreens/welcome3.dart' show Welcome3;
 import 'screens/ar.dart' show ARWidget;
 import 'screens/map.dart' show MapPage;
 //import 'screens/testing.dart' show HomePage;
@@ -65,7 +66,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    defaultPageIndex = 1;
+    defaultPageIndex = 0;
     selectedPageIndex = defaultPageIndex;
 
     firebaseManager
@@ -77,7 +78,7 @@ class _MainAppState extends State<MainApp> {
 
   final _pageController = PageController(
     // Index of home screen
-    initialPage: 1,
+    initialPage: 0,
   );
 
   @override
@@ -110,10 +111,10 @@ class _MainAppState extends State<MainApp> {
                 physics: const NeverScrollableScrollPhysics(),
                 // All pages
                 children: [
+                  Welcome1(redirect: handleNavSelection),
+                  Welcome2(redirect: handleNavSelection),
+                  Welcome3(redirect: handleNavSelection),
                   ARWidget(),
-                  Welcome1(redirect: handleNavSelection),
-                  Welcome1(redirect: handleNavSelection),
-                  Welcome1(redirect: handleNavSelection),
                   UserPage(
                     redirect: handleNavSelection,
                     username: "test",
@@ -145,26 +146,27 @@ class _MainAppState extends State<MainApp> {
                 ],
               ),
             ),
-            Align(
-                alignment: Alignment.bottomCenter,
-                // Navbar
-                child: Navbar(handleNavSelection: handleNavSelection)),
-            if (selectedPageIndex > 0 && selectedPageIndex < 4)
+            if (selectedPageIndex > 2)
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  // Navbar
+                  child: Navbar(handleNavSelection: handleNavSelection)),
+            if (selectedPageIndex < 3)
               Padding(
                 padding: const EdgeInsets.only(top: 64.0),
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: AnimatedSmoothIndicator(
                       count: 3,
-                      activeIndex: selectedPageIndex - 1,
-                      effect: const WormEffect(
+                      activeIndex: selectedPageIndex,
+                      effect: const ScaleEffect(
                           dotColor: AppColors.primary700,
                           activeDotColor: AppColors.primary900,
                           spacing: 15,
                           dotHeight: 12,
                           dotWidth: 12),
                       onDotClicked: (index) {
-                        handleNavSelection(index + 1);
+                        handleNavSelection(index);
                       }),
                 ),
               )
