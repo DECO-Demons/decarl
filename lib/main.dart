@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decarl/components/imagegrid.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +7,17 @@ import 'package:flutter/services.dart';
 import 'components/navbar.dart';
 import 'components/appcolors.dart';
 
+/*
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'firebase_options.dart';
+*/
 
 import 'screens/ar.dart' show ARWidget;
 import 'screens/map.dart' show MapPage;
-import 'screens/testing.dart' show HomePage;
+//import 'screens/testing.dart' show HomePage;
 import 'screens/user.dart' show UserPage;
 import 'screens/settings.dart' show SettingsPage;
 import 'screens/communityguidelines.dart' show CommunityGuidelines;
