@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:decarl/screens/ar.dart';
+import 'package:decarl/screens/welcomescreens/welcome1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'components/navbar.dart';
 import 'components/appcolors.dart';
@@ -88,9 +90,10 @@ class _MainAppState extends State<MainApp> {
     setState(() {
       selectedPageIndex = index;
     });
-    _pageController.animateToPage(selectedPageIndex,
+    /*_pageController.animateToPage(selectedPageIndex,
         duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOutCubic);
+        curve: Curves.easeInOutCubic);*/
+    _pageController.jumpToPage(selectedPageIndex);
   }
 
   @override
@@ -108,8 +111,9 @@ class _MainAppState extends State<MainApp> {
                 // All pages
                 children: [
                   ARWidget(),
-                  //HomePage(redirect: handleNavSelection),
-
+                  Welcome1(redirect: handleNavSelection),
+                  Welcome1(redirect: handleNavSelection),
+                  Welcome1(redirect: handleNavSelection),
                   UserPage(
                     redirect: handleNavSelection,
                     username: "test",
@@ -134,7 +138,6 @@ class _MainAppState extends State<MainApp> {
                   CommunityGuidelines(
                     redirect: handleNavSelection,
                   ),
-
                   MapPage(
                     initialLocationData: posData,
                     getRefreshedAnchors: getAnchors,
@@ -146,6 +149,25 @@ class _MainAppState extends State<MainApp> {
                 alignment: Alignment.bottomCenter,
                 // Navbar
                 child: Navbar(handleNavSelection: handleNavSelection)),
+            if (selectedPageIndex > 0 && selectedPageIndex < 4)
+              Padding(
+                padding: const EdgeInsets.only(top: 64.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: AnimatedSmoothIndicator(
+                      count: 3,
+                      activeIndex: selectedPageIndex - 1,
+                      effect: const WormEffect(
+                          dotColor: AppColors.primary700,
+                          activeDotColor: AppColors.primary900,
+                          spacing: 15,
+                          dotHeight: 12,
+                          dotWidth: 12),
+                      onDotClicked: (index) {
+                        handleNavSelection(index + 1);
+                      }),
+                ),
+              )
           ],
         ));
   }
