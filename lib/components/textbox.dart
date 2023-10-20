@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'appcolors.dart';
 
+/*
+  CustomTextBox
+  A widget that displays a box with a heading, body, image and/or icon
+*/
 class CustomTextBox extends StatefulWidget {
   final String? heading;
   final String? body;
@@ -142,16 +146,16 @@ class _TextBoxState extends State<CustomTextBox> {
                                           ? FontWeight
                                               .values[widget.headingWeight!]
                                           : FontWeight.w800,
-                                      fontSize: widget.headingSize != null
-                                          ? widget.headingSize
-                                          : 18)),
+                                      fontSize: widget.headingSize ?? 18)),
                             ),
+                            // If it can be expanded, create a button to expand it
                             isExpandable
                                 ? IconButton(
                                     onPressed: expandBox,
                                     icon: Icon(isExpanded
                                         ? LucideIcons.minus
                                         : LucideIcons.plus))
+                                // If there is a custom icon, use that instead
                                 : widget.customIcon != null
                                     ? Icon(widget.customIcon!.icon)
                                     : const SizedBox.shrink(),
@@ -168,9 +172,7 @@ class _TextBoxState extends State<CustomTextBox> {
                               fontWeight: widget.bodyWeight != null
                                   ? FontWeight.values[widget.bodyWeight!]
                                   : FontWeight.w500,
-                              fontSize: widget.bodySize != null
-                                  ? widget.bodySize
-                                  : 14,
+                              fontSize: widget.bodySize ?? 14,
                             ))
                     ]),
               ),

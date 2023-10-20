@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'appcolors.dart';
 
+/* 
+  UserInfo
+  A widget that displays the user's information
+  It is used in the settings page
+*/
 class UserInfo extends StatefulWidget {
   final String name;
   final String email;

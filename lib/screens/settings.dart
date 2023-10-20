@@ -5,6 +5,10 @@ import 'package:decarl/components/textbox.dart';
 import 'package:decarl/components/topbar.dart';
 import 'package:decarl/components/appcolors.dart';
 
+/* 
+  SettingsPage
+  The settings screen
+*/
 class SettingsPage extends StatefulWidget {
   final Function(int)? redirect;
   final String username;
