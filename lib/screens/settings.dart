@@ -42,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: const EdgeInsets.only(top: 24),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  //crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                         padding: const EdgeInsets.only(
@@ -51,20 +52,97 @@ class _SettingsPageState extends State<SettingsPage> {
                             email: widget.email,
                             location: widget.location,
                             image: widget.profilePicture)),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 32, right: 32, bottom: 16),
-                      child: CustomTextBox(
-                        heading: widget.name,
-                        body: "@" + widget.username,
-                        color: AppColors.secondary200,
-                        image: widget.profilePicture,
-                        imageRounded: true,
-                        headingSize: 24,
-                        bodySize: 18,
-                        betweenPadding: 0,
-                      ),
-                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // General Settings
+                        const Padding(
+                            padding: EdgeInsets.only(left: 32, bottom: 16),
+                            child: Text("General Settings",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900))),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                          child: CustomTextBox(
+                            heading: "Notifications",
+                            color: AppColors.grey200,
+                            center: true,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 32, right: 32, bottom: 16),
+                          child: GestureDetector(
+                            onTap: () {
+                              widget.redirect!(3);
+                            },
+                            child: const CustomTextBox(
+                              heading: "Community Guidelines",
+                              color: AppColors.secondary200,
+                              center: true,
+                            ),
+                          ),
+                        ),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                          child: CustomTextBox(
+                            heading: "Language",
+                            color: AppColors.grey200,
+                            center: true,
+                          ),
+                        ),
+
+                        // Security & Privacy
+                        const Padding(
+                            padding: EdgeInsets.only(left: 32, bottom: 16),
+                            child: Text("Security & Privacy",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900))),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                          child: CustomTextBox(
+                            heading: "Security",
+                            color: AppColors.grey200,
+                            center: true,
+                          ),
+                        ),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 32, right: 32, bottom: 16),
+                          child: CustomTextBox(
+                            heading: "Help Center",
+                            color: AppColors.grey200,
+                            center: true,
+                          ),
+                        ),
+
+                        // Log Out
+                        const Padding(
+                            padding: EdgeInsets.only(left: 32, bottom: 16),
+                            child: Text("Log Out",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900))),
+                        const Padding(
+                          padding:
+                              EdgeInsets.only(left: 32, right: 32, bottom: 118),
+                          child: CustomTextBox(
+                            heading: "Log Out",
+                            color: AppColors.grey200,
+                            center: true,
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ))),
       ],
