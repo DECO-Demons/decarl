@@ -30,12 +30,12 @@ class UserPage extends StatefulWidget {
 }
 
 const List<String> images = [
-  'https://via.placeholder.com/150',
-  'https://via.placeholder.com/150',
-  'https://via.placeholder.com/150',
-  'https://via.placeholder.com/150',
-  'https://via.placeholder.com/150',
-  'https://via.placeholder.com/150',
+  'assets/tempimg/1.png',
+  'assets/tempimg/2.png',
+  'assets/tempimg/3.png',
+  'assets/tempimg/4.png',
+  'assets/tempimg/5.png',
+  'assets/tempimg/6.png',
 ];
 
 class _UserPageState extends State<UserPage> {

@@ -63,7 +63,12 @@ class _ImageGridState extends State<ImageGrid> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return Image.network(widget.images[index]);
+                return ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      widget.images[index],
+                      fit: BoxFit.cover,
+                    ));
               },
             ),
           ],
