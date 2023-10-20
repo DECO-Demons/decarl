@@ -11,6 +11,7 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:decarl/components/appcolors.dart';
 import 'package:decarl/components/roundbutton.dart';
+import 'package:decarl/components/textbox.dart';
 import 'package:decarl/firebase_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -327,7 +328,6 @@ class _ARWidgetState
 
   void onModelSelected(AvailableModel model) {
     this.selectedModel = model;
-    this.arSessionManager!.onError(model.name + " selected");
     setState(() {
       modelChoiceActive = false;
     });
@@ -513,67 +513,41 @@ class _ModelSelectionWidgetState extends State<ModelSelectionWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.white,
-                style: BorderStyle.solid,
-                width: 4.0,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              shape: BoxShape.rectangle,
-              boxShadow: const <BoxShadow>[
-                BoxShadow(
-                  color: Color(0x66000000),
-                  blurRadius: 10.0,
-                  spreadRadius: 4.0,
-                )
-              ],
-            ),
-            child: Text('Choose a Model',
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .apply(fontSizeFactor: 2.0)),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.width * 0.65,
-            child: ListView.builder(
-              itemCount: models.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    widget.onTap(models[index]);
-                  },
-                  child: Card(
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Image.network(models[index].image)),
-                        Text(
-                          models[index].name,
-                          style: DefaultTextStyle.of(context)
-                              .style
-                              .apply(fontSizeFactor: 1.0),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 200,
+          height: 60,
+          child: CustomTextBox(
+            color: AppColors.secondary500,
+            heading: "Choose a Model",
+            center: true,
+            padding: 16,
+            headingSize: 20,
           )
-        ]);
+        ),
+        SizedBox(height: 15),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: GridView.count(
+            crossAxisCount: 2,
+            children: List.generate(models.length, (index) {
+              return GestureDetector(
+                onTap: () {
+                  widget.onTap(models[index]);
+                },
+                child:  Center(
+                  child: Image.network(
+               models[index].image,
+                    fit: BoxFit.contain,
+                  ),
+                )
+              );
+            }),
+          ),
+        ),
+      ]
+    );
   }
 }
