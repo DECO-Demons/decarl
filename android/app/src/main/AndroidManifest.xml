@@ -18,13 +18,6 @@
         android:icon="@mipmap/ic_launcher">
 
 
-        <!-- Google Maps API key -->
-        <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyBXsZq7PL2lnJQ_SE2AFhxj7Zn-DiDjyi4"/>
-
-        <meta-data android:name="com.google.android.ar.API_KEY"
-                android:value="AIzaSyCs59KwiBf5kwR_hbE80ySjmq6vEYnWFsE"/>
-
         
 
         <activity
